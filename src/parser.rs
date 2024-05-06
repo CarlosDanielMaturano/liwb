@@ -1,6 +1,6 @@
 use crate::lexer::Token;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Operator {
     Add,
     Subtract,
@@ -8,7 +8,7 @@ pub enum Operator {
     Divide,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Literal {
     Void,
     List(Vec<Literal>),
