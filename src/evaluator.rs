@@ -1,7 +1,10 @@
-use crate::parser::{Literal, Operator};
+use crate::{
+    math_functions::{self, SINGLE_OPERATORS},
+    parser::{Literal, Operator},
+};
 use std::collections::HashMap;
 
-type Variables = HashMap<String, Literal>;
+pub type Variables = HashMap<String, Literal>;
 
 pub fn eval_from_literals(literals: Vec<Literal>) -> Result<Vec<Literal>, String> {
     let mut variables: Variables = HashMap::new();
@@ -12,7 +15,7 @@ pub fn eval_from_literals(literals: Vec<Literal>) -> Result<Vec<Literal>, String
     Ok(results)
 }
 
-fn eval_literal(literal: Literal, variables: &mut Variables) -> Result<Literal, String> {
+pub fn eval_literal(literal: Literal, variables: &mut Variables) -> Result<Literal, String> {
     match literal {
         Literal::Void | Literal::Number(_) => Ok(literal),
         Literal::List(list) => eval_list(list, variables),
@@ -34,7 +37,14 @@ fn eval_list(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, S
         Literal::BinaryOperator(_) => eval_binary(list, variables),
         Literal::Symbol(s) => match s.as_str() {
             "define" => define_variable(list, variables),
-            _ => todo!(),
+            s if SINGLE_OPERATORS.contains(&s) => math_functions::single_operator(list, variables),
+            _ => {
+                if let Some(literal) = variables.get(s) {
+                    Ok(literal.clone())
+                } else {
+                    return Err(format!("Unknow symbol: {s}"));
+                }
+            }
         },
         _ => todo!(),
     }

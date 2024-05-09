@@ -37,25 +37,34 @@ fn parse_tokens(tokens: &mut PeekableTokens) -> Result<Literal, String> {
         return Err(format!("Error: Expected Lparen, found: {:?}", head));
     };
 
-    let mut objects: Vec<Literal> = Vec::new();
-
+    let mut literals: Vec<Literal> = Vec::new();
     while let Some(token) = tokens.peek() {
         match token {
             Token::Symbol(s) => match s.as_str() {
-                "+" => objects.push(Literal::BinaryOperator(Operator::Add)),
-                "-" => objects.push(Literal::BinaryOperator(Operator::Subtract)),
-                "*" => objects.push(Literal::BinaryOperator(Operator::Multiply)),
-                "/" => objects.push(Literal::BinaryOperator(Operator::Divide)),
-                _ => objects.push(Literal::Symbol(s.to_string())),
+                "+" => literals.push(Literal::BinaryOperator(Operator::Add)),
+                "-" => literals.push(Literal::BinaryOperator(Operator::Subtract)),
+                "*" => literals.push(Literal::BinaryOperator(Operator::Multiply)),
+                "/" => literals.push(Literal::BinaryOperator(Operator::Divide)),
+                _ => literals.push(Literal::Symbol(s.to_string())),
             },
-            Token::Number(n) => objects.push(Literal::Number(*n)),
-            Token::Lparen => objects.push(parse_tokens(tokens)?),
+            Token::Number(n) => literals.push(Literal::Number(*n)),
+            Token::Lparen => {
+                literals.push(parse_tokens(tokens)?);
+            }
             Token::Rparen => break,
         }
         tokens.next();
     }
-    if objects.is_empty() {
-        return Ok(Literal::Void);
+    let last = tokens.peek();
+    match last {
+        Some(Token::Rparen) => {
+            if literals.is_empty() {
+                return Ok(Literal::Void);
+            }
+            return Ok(Literal::List(literals));
+        }
+        _ => Err(format!(
+            "Unclosed parenthesis somewhere. Good luck trying to find it."
+        )),
     }
-    return Ok(Literal::List(objects));
 }

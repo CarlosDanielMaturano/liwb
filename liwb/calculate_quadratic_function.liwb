@@ -1,0 +1,13 @@
+(define a 1)
+(define b 2)
+(define c -3)
+
+(define delta (- (* b b) (* 4 a c)))
+(define x1 
+    (/ (+ (* -1 b) (sqrt delta)) 2))
+
+(define x2
+    (/ (- (* -1 b) (sqrt delta)) 2))
+
+(x1)
+(x2)

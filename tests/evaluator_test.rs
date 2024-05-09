@@ -80,11 +80,36 @@ fn multi_variable_definition() {
 
 #[test]
 fn area_of_trapezium() {
-    use std::os;
     let source = read_file("liwb/area_of_trapezium.liwb").unwrap();
     let literals = parse(lexer(&source)).unwrap();
     assert_eq!(
         eval_from_literals(literals).unwrap().pop().unwrap(),
         Literal::Number(30.0),
+    );
+}
+
+#[test]
+fn calculate_hypotenuses() {
+    let source = read_file("liwb/calculate_hypotenuses.liwb").unwrap();
+    let literals = parse(lexer(&source)).unwrap();
+    assert_eq!(
+        eval_from_literals(literals).unwrap().pop().unwrap(),
+        Literal::Number(5.0),
+    );
+}
+
+#[test]
+fn calculate_quadratic_function() {
+    let source = read_file("liwb/calculate_quadratic_function.liwb").unwrap();
+    let literals = parse(lexer(&source)).unwrap();
+    assert_eq!(
+        eval_from_literals(literals)
+            .unwrap()
+            .into_iter()
+            .rev()
+            .take(2)
+            .rev()
+            .collect::<Vec<_>>(),
+        vec![Literal::Number(1.0), Literal::Number(-3.0),],
     );
 }
