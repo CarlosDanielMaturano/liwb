@@ -1,6 +1,7 @@
 use liwb::evaluator::eval_from_literals;
 use liwb::lexer::*;
 use liwb::parser::*;
+use liwb::utils::*;
 
 #[test]
 fn simple_arithemtic_operation() {
@@ -75,4 +76,15 @@ fn multi_variable_definition() {
             Literal::Number(314.2857142857143),
         ]
     )
+}
+
+#[test]
+fn area_of_trapezium() {
+    use std::os;
+    let source = read_file("liwb/area_of_trapezium.liwb").unwrap();
+    let literals = parse(lexer(&source)).unwrap();
+    assert_eq!(
+        eval_from_literals(literals).unwrap().pop().unwrap(),
+        Literal::Number(30.0),
+    );
 }

@@ -3,10 +3,10 @@ use std::collections::HashMap;
 
 type Variables = HashMap<String, Literal>;
 
-pub fn eval_from_literals(source: Vec<Literal>) -> Result<Vec<Literal>, String> {
+pub fn eval_from_literals(literals: Vec<Literal>) -> Result<Vec<Literal>, String> {
     let mut variables: Variables = HashMap::new();
     let mut results: Vec<Literal> = Vec::new();
-    for literal in source.into_iter() {
+    for literal in literals.into_iter() {
         results.push(eval_literal(literal, &mut variables)?);
     }
     Ok(results)

@@ -1,0 +1,6 @@
+(define side-a 5)
+(define side-b 10)
+(define height 4)
+
+(/ (* (+ side-a side-b) height) 2)
+
