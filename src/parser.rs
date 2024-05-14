@@ -22,6 +22,7 @@ pub enum Literal {
     MathOperator(MathOperators),
     Boolean(bool),
     BinaryOperator(Operator),
+    If,
 }
 
 pub fn parse(tokens: Vec<Token>) -> Result<Vec<Literal>, String> {
@@ -55,6 +56,7 @@ fn parse_tokens(tokens: &mut PeekableTokens) -> Result<Literal, String> {
                 "=" => literals.push(Literal::BinaryOperator(Operator::Equal)),
                 "true" => literals.push(Literal::Boolean(true)),
                 "false" => literals.push(Literal::Boolean(false)),
+                "if" => literals.push(Literal::If),
                 _ => literals.push(Literal::Symbol(s.to_string())),
             },
             Token::Number(n) => literals.push(Literal::Number(*n)),

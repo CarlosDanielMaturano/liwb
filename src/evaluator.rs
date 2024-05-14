@@ -29,7 +29,7 @@ pub fn eval_literal(literal: Literal, variables: &mut Variables) -> Result<Liter
             };
             Ok(literal.clone())
         }
-        _ => todo!("Missing literal implementation"),
+        _ => todo!("Missing literal implementation for {:?}", literal),
     }
 }
 
@@ -40,6 +40,7 @@ fn eval_list(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, S
         Literal::Void => Ok(Literal::Void),
         Literal::MathOperator(_) => eval_math_operator(list, variables),
         Literal::BinaryOperator(_) => eval_binary_operator(list, variables),
+        Literal::If => eval_if(list, variables),
         Literal::Symbol(s) => match s.as_str() {
             "define" => define_variable(list, variables),
             s if SINGLE_OPERATORS.contains(&s) => single_operator(list, variables),
@@ -104,6 +105,23 @@ fn eval_equal(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, 
     let left = eval_literal(left.clone(), variables);
     let right = eval_literal(right.clone(), variables);
     Ok(Literal::Boolean(left == right))
+}
+
+fn eval_if(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> { 
+    let [_, statement, left, right] = &list[..4] else {
+        todo!()
+    };
+    let Ok(Literal::Boolean(statement)) = eval_literal(statement.clone(), variables) else {
+        panic!("Error: expected Literal::Boolean. Found {:?}", statement)
+    };
+    let left = eval_literal(left.clone(), variables)?;
+    let right = eval_literal(right.clone(), variables)?;
+    if statement {
+       Ok(left) 
+    } else {
+        Ok(right)
+    }
+
 }
 
 fn define_variable(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {

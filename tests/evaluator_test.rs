@@ -128,3 +128,19 @@ fn calculate_quadratic_function() {
     );
 }
 
+
+#[test]
+fn if_statement() {
+    let source = read_file("liwb/if_statement.liwb").unwrap();
+    let literals = parse(lexer(&source)).unwrap();
+    assert_eq!(
+        eval_from_literals(literals)
+            .unwrap()
+            .into_iter()
+            .rev()
+            .take(2)
+            .rev()
+            .collect::<Vec<_>>(),
+        vec![Literal::Number(10.0), Literal::Number(0.0)],
+    );
+}

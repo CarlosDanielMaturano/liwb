@@ -157,4 +157,3 @@ fn boolean_variable() {
         ])
     );
 }
-
