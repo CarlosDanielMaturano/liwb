@@ -2,5 +2,5 @@
 (define side-b 10)
 (define height 4)
 
-(/ (* (+ side-a side-b) height) 2)
-
+(define result (/ (* (+ side-a side-b) height) 2))
+(result)

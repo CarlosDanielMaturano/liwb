@@ -66,6 +66,20 @@ fn addition_with_variable() {
 }
 
 #[test]
+fn equal_operator() {
+    let literals = parse(lexer("(define 5-is-equal-10 (= 5 10))\n(5-is-equal-10)")).unwrap();
+    assert_eq!(
+        eval_from_literals(literals).unwrap(),
+        vec![Literal::Void, Literal::Boolean(false),]
+    );
+    let literals = parse(lexer("(define 5-is-equal-5 (= 5 5))\n(5-is-equal-5)")).unwrap();
+    assert_eq!(
+        eval_from_literals(literals).unwrap(),
+        vec![Literal::Void, Literal::Boolean(true),]
+    );
+}
+
+#[test]
 fn multi_variable_definition() {
     let literals = parse(lexer("(define pi (/ 22 7))\n(define r 10)\n(* pi (* r r))")).unwrap();
     assert_eq!(
@@ -113,3 +127,4 @@ fn calculate_quadratic_function() {
         vec![Literal::Number(1.0), Literal::Number(-3.0),],
     );
 }
+

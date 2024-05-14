@@ -1,6 +1,6 @@
 use crate::{
     math_functions::*,
-    parser::{Literal, Operator},
+    parser::{Literal, MathOperators, Operator},
 };
 use std::collections::HashMap;
 
@@ -38,7 +38,8 @@ fn eval_list(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, S
     match head {
         Literal::List(list) => eval_list(list.to_vec(), variables),
         Literal::Void => Ok(Literal::Void),
-        Literal::BinaryOperator(_) => eval_binary(list, variables),
+        Literal::MathOperator(_) => eval_math_operator(list, variables),
+        Literal::BinaryOperator(_) => eval_binary_operator(list, variables),
         Literal::Symbol(s) => match s.as_str() {
             "define" => define_variable(list, variables),
             s if SINGLE_OPERATORS.contains(&s) => single_operator(list, variables),
@@ -54,10 +55,10 @@ fn eval_list(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, S
     }
 }
 
-fn eval_binary(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
+fn eval_math_operator(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
     let mut list = list.into_iter();
     let operator = list.next();
-    let Some(Literal::BinaryOperator(operator)) = operator else {
+    let Some(Literal::MathOperator(operator)) = operator else {
         panic!("{:?}", operator)
     };
     list.reduce(|acc, literal| {
@@ -76,13 +77,33 @@ fn eval_binary(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal,
             )
         };
         return Literal::Number(match operator {
-            Operator::Add => acc + number,
-            Operator::Subtract => acc - number,
-            Operator::Multiply => acc * number,
-            Operator::Divide => acc / number,
+            MathOperators::Add => acc + number,
+            MathOperators::Subtract => acc - number,
+            MathOperators::Multiply => acc * number,
+            MathOperators::Divide => acc / number,
         });
     })
     .ok_or_else(|| format!("Error: Could not complete the operation!"))
+}
+
+fn eval_binary_operator(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
+    let mut list = list.into_iter();
+    let operator = list.next();
+    let Some(Literal::BinaryOperator(operator)) = operator else {
+        panic!("{:?}", operator)
+    };
+    match operator {
+        Operator::Equal => eval_equal(list.collect(), variables)
+    }
+}
+
+fn eval_equal(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> { 
+    let [left, right] = &list[..2] else {
+        todo!()
+    };
+    let left = eval_literal(left.clone(), variables);
+    let right = eval_literal(right.clone(), variables);
+    Ok(Literal::Boolean(left == right))
 }
 
 fn define_variable(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {

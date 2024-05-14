@@ -13,7 +13,7 @@ fn basic_arithmetic_operation() {
     assert_eq!(
         parse(lexer(source)).unwrap()[0],
         Literal::List(vec![
-            Literal::BinaryOperator(Operator::Add),
+            Literal::MathOperator(MathOperators::Add),
             Literal::Number(1.0),
             Literal::Number(2.0),
         ])
@@ -26,16 +26,16 @@ fn nested() {
     assert_eq!(
         parse(lexer(source)).unwrap()[0],
         Literal::List(vec![
-            Literal::BinaryOperator(Operator::Add),
+            Literal::MathOperator(MathOperators::Add),
             Literal::Number(1.0),
             Literal::List(vec![
-                Literal::BinaryOperator(Operator::Add),
+                Literal::MathOperator(MathOperators::Add),
                 Literal::Number(2.0),
                 Literal::List(vec![
-                    Literal::BinaryOperator(Operator::Add),
+                    Literal::MathOperator(MathOperators::Add),
                     Literal::Number(3.0),
                     Literal::List(vec![
-                        Literal::BinaryOperator(Operator::Add),
+                        Literal::MathOperator(MathOperators::Add),
                         Literal::Number(4.0),
                         Literal::Number(5.0),
                     ])
@@ -51,7 +51,7 @@ fn arithmetic_operation_with_void_on_right() {
     assert_eq!(
         parse(lexer(source)).unwrap()[0],
         Literal::List(vec![
-            Literal::BinaryOperator(Operator::Add),
+            Literal::MathOperator(MathOperators::Add),
             Literal::Number(1.0),
             Literal::Void
         ])
@@ -64,25 +64,25 @@ fn arithmetic_operation_with_list_on_both_side() {
     assert_eq!(
         parse(lexer(source)).unwrap()[0],
         Literal::List(vec![
-            Literal::BinaryOperator(Operator::Add),
+            Literal::MathOperator(MathOperators::Add),
             Literal::List(vec![
-                Literal::BinaryOperator(Operator::Add),
+                Literal::MathOperator(MathOperators::Add),
                 Literal::Number(1.0),
                 Literal::List(vec![
-                    Literal::BinaryOperator(Operator::Multiply),
+                    Literal::MathOperator(MathOperators::Multiply),
                     Literal::Number(2.0),
                     Literal::Number(3.0),
                 ])
             ]),
             Literal::List(vec![
-                Literal::BinaryOperator(Operator::Multiply),
+                Literal::MathOperator(MathOperators::Multiply),
                 Literal::List(vec![
-                    Literal::BinaryOperator(Operator::Divide),
+                    Literal::MathOperator(MathOperators::Divide),
                     Literal::Number(4.0),
                     Literal::Number(5.0),
                 ]),
                 Literal::List(vec![
-                    Literal::BinaryOperator(Operator::Subtract),
+                    Literal::MathOperator(MathOperators::Subtract),
                     Literal::Number(6.0),
                     Literal::Number(7.0),
                 ]),
@@ -100,7 +100,7 @@ fn define_variable() {
             Literal::Symbol("define".to_string()),
             Literal::Symbol("pi".to_string()),
             Literal::List(vec![
-                Literal::BinaryOperator(Operator::Divide),
+                Literal::MathOperator(MathOperators::Divide),
                 Literal::Number(22.0),
                 Literal::Number(7.0),
             ])
@@ -118,7 +118,7 @@ fn multi_line_statement() {
                 Literal::Symbol("define".to_string()),
                 Literal::Symbol("pi".to_string()),
                 Literal::List(vec![
-                    Literal::BinaryOperator(Operator::Divide),
+                    Literal::MathOperator(MathOperators::Divide),
                     Literal::Number(22.0),
                     Literal::Number(7.0),
                 ])
@@ -132,10 +132,10 @@ fn multi_line_statement() {
                 Literal::Symbol("define".to_string()),
                 Literal::Symbol("area-of-circle".to_string()),
                 Literal::List(vec![
-                    Literal::BinaryOperator(Operator::Multiply),
+                    Literal::MathOperator(MathOperators::Multiply),
                     Literal::Symbol("pi".to_string()),
                     Literal::List(vec![
-                        Literal::BinaryOperator(Operator::Multiply),
+                        Literal::MathOperator(MathOperators::Multiply),
                         Literal::Symbol("r".to_string()),
                         Literal::Symbol("r".to_string()),
                     ])
@@ -144,3 +144,17 @@ fn multi_line_statement() {
         ]
     );
 }
+
+#[test]
+fn boolean_variable() {
+    let source = "(define x false)";
+    assert_eq!(
+        parse(lexer(source)).unwrap()[0],
+        Literal::List(vec![
+            Literal::Symbol("define".to_string()),
+            Literal::Symbol("x".to_string()),
+            Literal::Boolean(false)
+        ])
+    );
+}
+

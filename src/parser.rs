@@ -1,11 +1,16 @@
 use crate::lexer::Token;
 
 #[derive(Debug, PartialEq, Clone)]
-pub enum Operator {
+pub enum MathOperators {
     Add,
     Subtract,
     Multiply,
     Divide,
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum Operator {
+    Equal,
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -14,6 +19,8 @@ pub enum Literal {
     List(Vec<Literal>),
     Number(f64),
     Symbol(String),
+    MathOperator(MathOperators),
+    Boolean(bool),
     BinaryOperator(Operator),
 }
 
@@ -41,10 +48,13 @@ fn parse_tokens(tokens: &mut PeekableTokens) -> Result<Literal, String> {
     while let Some(token) = tokens.peek() {
         match token {
             Token::Symbol(s) => match s.as_str() {
-                "+" => literals.push(Literal::BinaryOperator(Operator::Add)),
-                "-" => literals.push(Literal::BinaryOperator(Operator::Subtract)),
-                "*" => literals.push(Literal::BinaryOperator(Operator::Multiply)),
-                "/" => literals.push(Literal::BinaryOperator(Operator::Divide)),
+                "+" => literals.push(Literal::MathOperator(MathOperators::Add)),
+                "-" => literals.push(Literal::MathOperator(MathOperators::Subtract)),
+                "*" => literals.push(Literal::MathOperator(MathOperators::Multiply)),
+                "/" => literals.push(Literal::MathOperator(MathOperators::Divide)),
+                "=" => literals.push(Literal::BinaryOperator(Operator::Equal)),
+                "true" => literals.push(Literal::Boolean(true)),
+                "false" => literals.push(Literal::Boolean(false)),
                 _ => literals.push(Literal::Symbol(s.to_string())),
             },
             Token::Number(n) => literals.push(Literal::Number(*n)),
