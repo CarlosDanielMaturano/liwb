@@ -1,10 +1,14 @@
 use crate::{
-    math_functions::{self, SINGLE_OPERATORS},
+    math_functions::*,
     parser::{Literal, Operator},
 };
 use std::collections::HashMap;
 
 pub type Variables = HashMap<String, Literal>;
+
+const SINGLE_OPERATORS: [&'static str; 9] = [
+    "sqrt", "sin", "cos", "tan", "abs", "log10", "floor", "ceil", "round",
+];
 
 pub fn eval_from_literals(literals: Vec<Literal>) -> Result<Vec<Literal>, String> {
     let mut variables: Variables = HashMap::new();
@@ -37,7 +41,7 @@ fn eval_list(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, S
         Literal::BinaryOperator(_) => eval_binary(list, variables),
         Literal::Symbol(s) => match s.as_str() {
             "define" => define_variable(list, variables),
-            s if SINGLE_OPERATORS.contains(&s) => math_functions::single_operator(list, variables),
+            s if SINGLE_OPERATORS.contains(&s) => single_operator(list, variables),
             _ => {
                 if let Some(literal) = variables.get(s) {
                     Ok(literal.clone())
