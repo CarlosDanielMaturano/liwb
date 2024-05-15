@@ -21,7 +21,7 @@ pub fn eval_from_literals(literals: Vec<Literal>) -> Result<Vec<Literal>, String
 
 pub fn eval_literal(literal: Literal, variables: &mut Variables) -> Result<Literal, String> {
     match literal {
-        Literal::Void | Literal::Number(_) => Ok(literal),
+        Literal::Void | Literal::Number(_) | Literal::String(_) => Ok(literal),
         Literal::List(list) => eval_list(list, variables),
         Literal::Symbol(s) => {
             let Some(literal) = variables.get(&s) else {
@@ -94,20 +94,18 @@ fn eval_binary_operator(list: Vec<Literal>, variables: &mut Variables) -> Result
         panic!("{:?}", operator)
     };
     match operator {
-        Operator::Equal => eval_equal(list.collect(), variables)
+        Operator::Equal => eval_equal(list.collect(), variables),
     }
 }
 
-fn eval_equal(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> { 
-    let [left, right] = &list[..2] else {
-        todo!()
-    };
+fn eval_equal(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
+    let [left, right] = &list[..2] else { todo!() };
     let left = eval_literal(left.clone(), variables);
     let right = eval_literal(right.clone(), variables);
     Ok(Literal::Boolean(left == right))
 }
 
-fn eval_if(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> { 
+fn eval_if(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
     let [_, statement, left, right] = &list[..4] else {
         todo!()
     };
@@ -117,11 +115,10 @@ fn eval_if(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, Str
     let left = eval_literal(left.clone(), variables)?;
     let right = eval_literal(right.clone(), variables)?;
     if statement {
-       Ok(left) 
+        Ok(left)
     } else {
         Ok(right)
     }
-
 }
 
 fn define_variable(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {

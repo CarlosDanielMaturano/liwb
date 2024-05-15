@@ -157,3 +157,16 @@ fn boolean_variable() {
         ])
     );
 }
+
+#[test]
+fn define_string_variable() {
+    let source = "(define message \"Hello, World\")";
+    assert_eq!(
+        parse(lexer(source)).unwrap()[0],
+        Literal::List(vec![
+            Literal::Symbol("define".to_string()),
+            Literal::Symbol("message".to_string()),
+            Literal::String("Hello, World".to_string()),
+        ])
+    );
+}

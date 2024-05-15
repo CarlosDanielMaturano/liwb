@@ -7,14 +7,13 @@ pub enum Token {
 }
 
 pub fn lexer<'a>(source: &'a str) -> Vec<Token> {
-    source
-        .replace("(", " ( ")
-        .replace(")", " ) ")
-        .split_whitespace()
-        .map(|lexeme| match lexeme {
+    regex::Regex::new(r#""[^"]*"|\S+"#)
+        .unwrap()
+        .find_iter(source.replace("(", " ( ").replace(")", " ) ").as_str())
+        .map(|lexeme| match lexeme.as_str() {
             "(" => Token::Lparen,
             ")" => Token::Rparen,
-            _ => {
+            lexeme => {
                 if let Ok(number) = lexeme.parse::<f64>() {
                     return Token::Number(number);
                 }

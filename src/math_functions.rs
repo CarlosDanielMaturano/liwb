@@ -5,6 +5,7 @@ pub fn single_operator(list: Vec<Literal>, variables: &mut Variables) -> Result<
     let [Literal::Symbol(operator), left] = &list[..=1] else {
         panic!()
     };
+
     let left = eval_literal(left.clone(), variables)?;
     let Literal::Number(n) = left else {
         return Err(format!(
@@ -12,6 +13,7 @@ pub fn single_operator(list: Vec<Literal>, variables: &mut Variables) -> Result<
             left
         ));
     };
+
     Ok(Literal::Number(match operator.as_str() {
         "sqrt" => n.sqrt(),
         "sin" => n.sin(),

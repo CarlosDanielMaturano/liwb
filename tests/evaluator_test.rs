@@ -128,7 +128,6 @@ fn calculate_quadratic_function() {
     );
 }
 
-
 #[test]
 fn if_statement() {
     let source = read_file("liwb/if_statement.liwb").unwrap();
@@ -142,5 +141,14 @@ fn if_statement() {
             .rev()
             .collect::<Vec<_>>(),
         vec![Literal::Number(10.0), Literal::Number(0.0)],
+    );
+}
+
+#[test]
+fn string_variable() {
+    let literals = parse(lexer("(define name \"Daniel\") (name)")).unwrap();
+    assert_eq!(
+        eval_from_literals(literals).unwrap(),
+        vec![Literal::Void, Literal::String("Daniel".to_string())]
     );
 }

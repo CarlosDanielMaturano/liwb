@@ -19,6 +19,7 @@ pub enum Literal {
     List(Vec<Literal>),
     Number(f64),
     Symbol(String),
+    String(String),
     MathOperator(MathOperators),
     Boolean(bool),
     BinaryOperator(Operator),
@@ -57,7 +58,18 @@ fn parse_tokens(tokens: &mut PeekableTokens) -> Result<Literal, String> {
                 "true" => literals.push(Literal::Boolean(true)),
                 "false" => literals.push(Literal::Boolean(false)),
                 "if" => literals.push(Literal::If),
-                _ => literals.push(Literal::Symbol(s.to_string())),
+                _ => {
+                    if s.contains("\"") {
+                        if s.chars().into_iter().filter(|c| *c == '"').count() != 2 {
+                            return Err(String::from(
+                                "You have a invalid string literal somewhere, good luck!",
+                            ));
+                        }
+                        literals.push(Literal::String(s.replace("\"", "").to_string()));
+                    } else {
+                        literals.push(Literal::Symbol(s.to_string()));
+                    }
+                }
             },
             Token::Number(n) => literals.push(Literal::Number(*n)),
             Token::Lparen => {
