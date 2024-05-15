@@ -73,10 +73,12 @@ fn parse_tokens(tokens: &mut PeekableTokens) -> Result<Literal, String> {
                 }
             },
             Token::LBracket => {
-                let Literal::List(list) = parse_tokens(tokens)? else {
-                    panic!()
+                let result = match parse_tokens(tokens)? {
+                    Literal::List(list) => list,
+                    Literal::Void => vec![Literal::Void],
+                    _ => panic!() 
                 };
-                literals.push(Literal::Vector(list));
+                literals.push(Literal::Vector(result));
             }
             Token::Number(n) => literals.push(Literal::Number(*n)),
             Token::Lparen => {

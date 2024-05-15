@@ -15,7 +15,7 @@ pub fn eval_operation(list: Vec<Literal>, variables: &mut Variables) -> Result<L
 
 pub fn eval_nth(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
     if list.len() != 3 {
-        todo!()
+        return Err(format!("Missing arguments for nth"))
     }
     let [_, vector_name, Literal::Number(index)] = &list[..3] else {
         panic!("{:?}", list);
@@ -27,7 +27,7 @@ pub fn eval_nth(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal
         todo!()
     }
     let index: usize = index.round() as usize;
-    v.into_iter()
+    Ok(v.into_iter()
         .nth(index)
-        .ok_or_else(|| format!("Could not get the {index}th element of the vector"))
+        .unwrap_or(Literal::Void))
 }

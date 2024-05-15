@@ -192,3 +192,18 @@ fn get_element_of_vector() {
         vec![Literal::Number(1.0)],
     );
 }
+
+#[test]
+fn out_of_bounds_vector_index() {
+    let source = read_file("liwb/out_of_bounds_vector_index.liwb").unwrap();
+    let literals = parse(lexer(&source)).unwrap();
+    assert_eq!(
+        eval_from_literals(literals)
+            .unwrap()
+            .into_iter()
+            .rev()
+            .take(1)
+            .collect::<Vec<_>>(),
+        vec![Literal::Void],
+    );
+}
