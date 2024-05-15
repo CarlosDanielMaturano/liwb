@@ -23,6 +23,13 @@ pub fn eval_literal(literal: Literal, variables: &mut Variables) -> Result<Liter
     match literal {
         Literal::Void | Literal::Number(_) | Literal::String(_) => Ok(literal),
         Literal::List(list) => eval_list(list, variables),
+        Literal::Vector(v) => Ok(Literal::Vector(
+            v.into_iter()
+                .map(|literal| 
+                    eval_literal(literal, variables)
+                )
+                .collect::<Result<Vec<Literal>, String>>()?
+        )),
         Literal::Symbol(s) => {
             let Some(literal) = variables.get(&s) else {
                 return Err(format!("Unknow symbol {s}"));

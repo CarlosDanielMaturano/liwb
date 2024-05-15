@@ -152,3 +152,18 @@ fn string_variable() {
         vec![Literal::Void, Literal::String("Daniel".to_string())]
     );
 }
+
+#[test]
+fn vector_variable()  {
+    let literals = parse(lexer(r#"(define numbers [1 "two" 3 "four" (+ 4 1)]) (numbers)"#)).unwrap();
+    assert_eq!(
+        eval_from_literals(literals).unwrap(),
+        vec![Literal::Void, Literal::Vector(vec![
+                Literal::Number(1.0),
+                Literal::String("two".to_string()),
+                Literal::Number(3.0),
+                Literal::String("four".to_string()),
+                Literal::Number(5.0),
+        ])]
+    );
+}

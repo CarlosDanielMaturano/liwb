@@ -4,15 +4,18 @@ pub enum Token {
     Number(f64),
     Lparen,
     Rparen,
+    LBracket,
+    RBracket,
 }
 
 pub fn lexer<'a>(source: &'a str) -> Vec<Token> {
-    regex::Regex::new(r#""[^"]*"|\S+"#)
-        .unwrap()
-        .find_iter(source.replace("(", " ( ").replace(")", " ) ").as_str())
+    regex::Regex::new(r#"[^\s\[\]\(\)"']+|(\[|\]|\(|\)|"[^"]*")"#).unwrap()
+        .find_iter(source)
         .map(|lexeme| match lexeme.as_str() {
             "(" => Token::Lparen,
             ")" => Token::Rparen,
+            "[" => Token::LBracket,
+            "]" => Token::RBracket,
             lexeme => {
                 if let Ok(number) = lexeme.parse::<f64>() {
                     return Token::Number(number);

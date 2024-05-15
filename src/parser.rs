@@ -17,6 +17,7 @@ pub enum Operator {
 pub enum Literal {
     Void,
     List(Vec<Literal>),
+    Vector(Vec<Literal>),
     Number(f64),
     Symbol(String),
     String(String),
@@ -42,7 +43,7 @@ pub fn parse(tokens: Vec<Token>) -> Result<Vec<Literal>, String> {
 type PeekableTokens = std::iter::Peekable<std::vec::IntoIter<Token>>;
 fn parse_tokens(tokens: &mut PeekableTokens) -> Result<Literal, String> {
     let head = tokens.next();
-    let Some(Token::Lparen) = head else {
+    let Some(Token::Lparen | Token::LBracket) = head else {
         return Err(format!("Error: Expected Lparen, found: {:?}", head));
     };
 
@@ -69,19 +70,26 @@ fn parse_tokens(tokens: &mut PeekableTokens) -> Result<Literal, String> {
                     } else {
                         literals.push(Literal::Symbol(s.to_string()));
                     }
+
                 }
+            },
+            Token::LBracket => {
+                let Literal::List(list) = parse_tokens(tokens)? else {
+                    panic!()
+                };
+                literals.push(Literal::Vector(list));
             },
             Token::Number(n) => literals.push(Literal::Number(*n)),
             Token::Lparen => {
                 literals.push(parse_tokens(tokens)?);
             }
-            Token::Rparen => break,
+            Token::Rparen | Token::RBracket => break,
         }
         tokens.next();
     }
     let last = tokens.peek();
     match last {
-        Some(Token::Rparen) => {
+        Some(Token::Rparen | Token::RBracket) => {
             if literals.is_empty() {
                 return Ok(Literal::Void);
             }

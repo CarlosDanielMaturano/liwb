@@ -170,3 +170,26 @@ fn define_string_variable() {
         ])
     );
 }
+
+#[test]
+fn vector_definition() {
+    let source = r#"(define numbers [1 "two" 3 "four" (+ 4 1)])"#;
+    assert_eq!(
+        parse(lexer(source)).unwrap()[0],
+        Literal::List(vec![
+            Literal::Symbol("define".to_string()),
+            Literal::Symbol("numbers".to_string()),
+            Literal::Vector(vec![
+                Literal::Number(1.0),
+                Literal::String("two".to_string()),
+                Literal::Number(3.0),
+                Literal::String("four".to_string()),
+                Literal::List(vec![
+                    Literal::MathOperator(MathOperators::Add),
+                    Literal::Number(4.0),
+                    Literal::Number(1.0)
+                ])
+            ]),
+        ])
+    );
+}
