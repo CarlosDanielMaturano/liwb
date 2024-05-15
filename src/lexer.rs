@@ -9,7 +9,8 @@ pub enum Token {
 }
 
 pub fn lexer<'a>(source: &'a str) -> Vec<Token> {
-    regex::Regex::new(r#"[^\s\[\]\(\)"']+|(\[|\]|\(|\)|"[^"]*")"#).unwrap()
+    regex::Regex::new(r#"[^\s\[\]\(\)"']+|(\[|\]|\(|\)|"[^"]*")"#)
+        .unwrap()
         .find_iter(source)
         .map(|lexeme| match lexeme.as_str() {
             "(" => Token::Lparen,

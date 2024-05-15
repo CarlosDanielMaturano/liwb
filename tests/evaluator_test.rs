@@ -154,16 +154,41 @@ fn string_variable() {
 }
 
 #[test]
-fn vector_variable()  {
-    let literals = parse(lexer(r#"(define numbers [1 "two" 3 "four" (+ 4 1)]) (numbers)"#)).unwrap();
+fn vector_variable() {
+    let literals = parse(lexer(
+        r#"(define numbers [1 "two" 3 "four" (+ 4 1)]) (numbers)"#,
+    ))
+    .unwrap();
     assert_eq!(
         eval_from_literals(literals).unwrap(),
-        vec![Literal::Void, Literal::Vector(vec![
+        vec![
+            Literal::Void,
+            Literal::Vector(vec![
                 Literal::Number(1.0),
                 Literal::String("two".to_string()),
                 Literal::Number(3.0),
                 Literal::String("four".to_string()),
-                Literal::Number(5.0),
-        ])]
+                Literal::List(vec![
+                    Literal::MathOperator(MathOperators::Add),
+                    Literal::Number(4.0),
+                    Literal::Number(1.0),
+                ])
+            ])
+        ]
+    );
+}
+
+#[test]
+fn get_element_of_vector() {
+    let source = read_file("liwb/get_element_of_vector.liwb").unwrap();
+    let literals = parse(lexer(&source)).unwrap();
+    assert_eq!(
+        eval_from_literals(literals)
+            .unwrap()
+            .into_iter()
+            .rev()
+            .take(1)
+            .collect::<Vec<_>>(),
+        vec![Literal::Number(1.0)],
     );
 }

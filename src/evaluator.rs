@@ -1,14 +1,17 @@
 use crate::{
     math_functions::*,
     parser::{Literal, MathOperators, Operator},
+    vector_manipulation::*,
 };
 use std::collections::HashMap;
 
 pub type Variables = HashMap<String, Literal>;
 
-const SINGLE_OPERATORS: [&'static str; 9] = [
+const SINGLE_MATH_OPERATORS: [&'static str; 9] = [
     "sqrt", "sin", "cos", "tan", "abs", "log10", "floor", "ceil", "round",
 ];
+
+const VECTOR_OPERATORS: [&'static str; 2] = ["nth", "push"];
 
 pub fn eval_from_literals(literals: Vec<Literal>) -> Result<Vec<Literal>, String> {
     let mut variables: Variables = HashMap::new();
@@ -21,15 +24,8 @@ pub fn eval_from_literals(literals: Vec<Literal>) -> Result<Vec<Literal>, String
 
 pub fn eval_literal(literal: Literal, variables: &mut Variables) -> Result<Literal, String> {
     match literal {
-        Literal::Void | Literal::Number(_) | Literal::String(_) => Ok(literal),
+        Literal::Void | Literal::Number(_) | Literal::String(_) | Literal::Vector(_) => Ok(literal),
         Literal::List(list) => eval_list(list, variables),
-        Literal::Vector(v) => Ok(Literal::Vector(
-            v.into_iter()
-                .map(|literal| 
-                    eval_literal(literal, variables)
-                )
-                .collect::<Result<Vec<Literal>, String>>()?
-        )),
         Literal::Symbol(s) => {
             let Some(literal) = variables.get(&s) else {
                 return Err(format!("Unknow symbol {s}"));
@@ -50,7 +46,8 @@ fn eval_list(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, S
         Literal::If => eval_if(list, variables),
         Literal::Symbol(s) => match s.as_str() {
             "define" => define_variable(list, variables),
-            s if SINGLE_OPERATORS.contains(&s) => single_operator(list, variables),
+            s if SINGLE_MATH_OPERATORS.contains(&s) => single_operator(list, variables),
+            s if VECTOR_OPERATORS.contains(&s) => eval_operation(list, variables),
             _ => {
                 if let Some(literal) = variables.get(s) {
                     Ok(literal.clone())
