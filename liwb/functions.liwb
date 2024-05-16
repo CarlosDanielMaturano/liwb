@@ -1,0 +1,16 @@
+(define x 10)
+
+(fn sub-from-one [x y]
+    (- 1 x y))
+
+(fn opp [x y]
+    (if (= x 5)
+        0
+        (* x (sub-from-one x y))))
+
+(fn return-name []
+    ("Name"))
+
+(opp x 5) 
+(return-name)
+(opp 5 0)
