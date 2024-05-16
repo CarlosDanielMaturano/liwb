@@ -3,11 +3,12 @@ use crate::parser::Literal;
 
 pub fn single_operator(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
     let [Literal::Symbol(operator), left] = &list[..=1] else {
-        panic!()
+        return Err(format!(
+            "Missing operators! Expected Literal::Operator Literal::Number, found: {:?}",
+            list
+        ));
     };
-
-    let left = eval_literal(left.clone(), variables)?;
-    let Literal::Number(n) = left else {
+    let Literal::Number(n) = eval_literal(left.clone(), variables)? else {
         return Err(format!(
             "Error: Could not complete sqrt evaluation, expected Literal::Number, found {:?}",
             left

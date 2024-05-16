@@ -76,7 +76,12 @@ fn parse_tokens(tokens: &mut PeekableTokens) -> Result<Literal, String> {
                 let result = match parse_tokens(tokens)? {
                     Literal::List(list) => list,
                     Literal::Void => vec![Literal::Void],
-                    _ => panic!() 
+                    result => {
+                        return Err(format!(
+                            "Expected LIteral::List or Literal::Void for Vector. found: {:?}",
+                            result
+                        ))
+                    }
                 };
                 literals.push(Literal::Vector(result));
             }

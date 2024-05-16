@@ -37,26 +37,27 @@ pub fn eval_literal(literal: Literal, variables: &mut Variables) -> Result<Liter
 }
 
 fn eval_list(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
-    let head = &list[0];
+    let head = list[0].clone();
     match head {
         Literal::List(list) => eval_list(list.to_vec(), variables),
         Literal::Void => Ok(Literal::Void),
         Literal::MathOperator(_) => eval_math_operator(list, variables),
         Literal::BinaryOperator(_) => eval_binary_operator(list, variables),
         Literal::If => eval_if(list, variables),
+        Literal::Vector(_) => eval_literal(head, variables),
         Literal::Symbol(s) => match s.as_str() {
             "define" => define_variable(list, variables),
             s if SINGLE_MATH_OPERATORS.contains(&s) => single_operator(list, variables),
             s if VECTOR_OPERATORS.contains(&s) => eval_operation(list, variables),
             _ => {
-                if let Some(literal) = variables.get(s) {
+                if let Some(literal) = variables.get(&s) {
                     Ok(literal.clone())
                 } else {
                     return Err(format!("Unknow symbol: {s}"));
                 }
             }
         },
-        _ => todo!(),
+        Literal::String(_) | Literal::Boolean(_) | Literal::Number(_) => Ok(head),
     }
 }
 
@@ -64,38 +65,54 @@ fn eval_math_operator(list: Vec<Literal>, variables: &mut Variables) -> Result<L
     let mut list = list.into_iter();
     let operator = list.next();
     let Some(Literal::MathOperator(operator)) = operator else {
-        panic!("{:?}", operator)
+        return Err(format!(
+            "Error. Expected Literal::MathOperator, found: {:?}",
+            operator
+        ));
     };
-    list.reduce(|acc, literal| {
+    let head = list
+        .next()
+        .ok_or(format!("Error. Could not get the head of the operation."))?;
+
+    let Literal::Number(head) = eval_literal(head.clone(), variables)? else {
+        return Err(format!(
+            "Error. Expected head to be Literal::Number, found: {:?}",
+            head
+        ));
+    };
+
+    list.try_fold(Literal::Number(head), |acc, literal| {
         let literal = eval_literal(literal, variables);
-        let Ok(Literal::Number(number)) = literal else {
-            panic!(
+        let Ok(Literal::Number(n)) = literal else {
+            return Err(format!(
                 "Error. Expected Literal::Number for the literal, found {:?}",
                 literal
-            )
+            ));
         };
         let acc = eval_literal(acc, variables);
         let Ok(Literal::Number(acc)) = acc else {
-            panic!(
+            return Err(format!(
                 "Error. Expected Literal::Number for the acumulator, found {:?}",
                 acc
-            )
+            ));
         };
-        return Literal::Number(match operator {
-            MathOperators::Add => acc + number,
-            MathOperators::Subtract => acc - number,
-            MathOperators::Multiply => acc * number,
-            MathOperators::Divide => acc / number,
-        });
+        return Ok(Literal::Number(match operator {
+            MathOperators::Add => acc + n,
+            MathOperators::Subtract => acc - n,
+            MathOperators::Multiply => acc * n,
+            MathOperators::Divide => acc / n,
+        }));
     })
-    .ok_or_else(|| format!("Error: Could not complete the operation!"))
 }
 
 fn eval_binary_operator(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
     let mut list = list.into_iter();
     let operator = list.next();
     let Some(Literal::BinaryOperator(operator)) = operator else {
-        panic!("{:?}", operator)
+        return Err(format!(
+            "Error. Expected Literal::BinaryOperator, found: {:?}",
+            operator
+        ));
     };
     match operator {
         Operator::Equal => eval_equal(list.collect(), variables),
@@ -110,11 +127,14 @@ fn eval_equal(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, 
 }
 
 fn eval_if(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
-    let [_, statement, left, right] = &list[..4] else {
-        todo!()
+    let [statement, left, right] = &list[1..4] else {
+        return Err(format!("Error. To few arguments to IF."));
     };
     let Ok(Literal::Boolean(statement)) = eval_literal(statement.clone(), variables) else {
-        panic!("Error: expected Literal::Boolean. Found {:?}", statement)
+        return Err(format!(
+            "Error: expected Literal::Boolean. Found {:?}",
+            statement
+        ));
     };
     let left = eval_literal(left.clone(), variables)?;
     let right = eval_literal(right.clone(), variables)?;
