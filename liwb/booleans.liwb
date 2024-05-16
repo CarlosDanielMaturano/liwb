@@ -1,3 +1,0 @@
-(define x 10)
-
-(define x-is-equal-ten (= x 10))

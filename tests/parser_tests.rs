@@ -1,4 +1,5 @@
 use liwb::lexer::*;
+use liwb::literals::*;
 use liwb::parser::*;
 
 #[test]

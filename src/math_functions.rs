@@ -1,5 +1,5 @@
 use crate::evaluator::*;
-use crate::parser::Literal;
+use crate::literals::*;
 
 pub fn single_operator(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
     let [Literal::Symbol(operator), left] = &list[..=1] else {

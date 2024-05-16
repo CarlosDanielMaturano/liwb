@@ -1,5 +1,5 @@
 use crate::evaluator::*;
-use crate::parser::Literal;
+use crate::literals::*;
 
 pub fn eval_operation(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
     let operator = &list[0];

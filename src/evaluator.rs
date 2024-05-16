@@ -1,8 +1,7 @@
-use crate::{
-    math_functions::*,
-    parser::{Literal, MathOperators, Operator},
-    vector_manipulation::*,
-};
+use crate::functions::eval_function;
+use crate::literals::*;
+use crate::{functions::define_function, math_functions::*, vector_manipulation::*};
+
 use std::collections::HashMap;
 
 pub type Variables = HashMap<String, Literal>;
@@ -24,7 +23,11 @@ pub fn eval_from_literals(literals: Vec<Literal>) -> Result<Vec<Literal>, String
 
 pub fn eval_literal(literal: Literal, variables: &mut Variables) -> Result<Literal, String> {
     match literal {
-        Literal::Void | Literal::Number(_) | Literal::String(_) | Literal::Vector(_) => Ok(literal),
+        Literal::Void
+        | Literal::Number(_)
+        | Literal::String(_)
+        | Literal::Vector(_)
+        | Literal::Boolean(_) => Ok(literal),
         Literal::List(list) => eval_list(list, variables),
         Literal::Symbol(s) => {
             let Some(literal) = variables.get(&s) else {
@@ -46,11 +49,15 @@ fn eval_list(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, S
         Literal::If => eval_if(list, variables),
         Literal::Vector(_) => eval_literal(head, variables),
         Literal::Symbol(s) => match s.as_str() {
+            "fn" => define_function(list, variables),
             "define" => define_variable(list, variables),
             s if SINGLE_MATH_OPERATORS.contains(&s) => single_operator(list, variables),
             s if VECTOR_OPERATORS.contains(&s) => eval_operation(list, variables),
             _ => {
                 if let Some(literal) = variables.get(&s) {
+                    if let Literal::Function { .. } = literal {
+                        return eval_function(literal.clone(), list, variables);
+                    }
                     Ok(literal.clone())
                 } else {
                     return Err(format!("Unknow symbol: {s}"));
@@ -58,18 +65,21 @@ fn eval_list(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, S
             }
         },
         Literal::String(_) | Literal::Boolean(_) | Literal::Number(_) => Ok(head),
+        Literal::Function { .. } => todo!(),
     }
 }
 
 fn eval_math_operator(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
     let mut list = list.into_iter();
     let operator = list.next();
+
     let Some(Literal::MathOperator(operator)) = operator else {
         return Err(format!(
             "Error. Expected Literal::MathOperator, found: {:?}",
             operator
         ));
     };
+
     let head = list
         .next()
         .ok_or(format!("Error. Could not get the head of the operation."))?;
@@ -130,14 +140,17 @@ fn eval_if(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, Str
     let [statement, left, right] = &list[1..4] else {
         return Err(format!("Error. To few arguments to IF."));
     };
+
     let Ok(Literal::Boolean(statement)) = eval_literal(statement.clone(), variables) else {
         return Err(format!(
             "Error: expected Literal::Boolean. Found {:?}",
             statement
         ));
     };
+
     let left = eval_literal(left.clone(), variables)?;
     let right = eval_literal(right.clone(), variables)?;
+
     if statement {
         Ok(left)
     } else {

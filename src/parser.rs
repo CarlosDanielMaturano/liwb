@@ -1,31 +1,5 @@
 use crate::lexer::Token;
-
-#[derive(Debug, PartialEq, Clone)]
-pub enum MathOperators {
-    Add,
-    Subtract,
-    Multiply,
-    Divide,
-}
-
-#[derive(Debug, PartialEq, Clone)]
-pub enum Operator {
-    Equal,
-}
-
-#[derive(Debug, PartialEq, Clone)]
-pub enum Literal {
-    Void,
-    List(Vec<Literal>),
-    Vector(Vec<Literal>),
-    Number(f64),
-    Symbol(String),
-    String(String),
-    MathOperator(MathOperators),
-    Boolean(bool),
-    BinaryOperator(Operator),
-    If,
-}
+use crate::literals::*;
 
 pub fn parse(tokens: Vec<Token>) -> Result<Vec<Literal>, String> {
     if tokens.is_empty() {

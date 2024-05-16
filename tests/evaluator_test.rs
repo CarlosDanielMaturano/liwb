@@ -1,5 +1,6 @@
 use liwb::evaluator::eval_from_literals;
 use liwb::lexer::*;
+use liwb::literals::*;
 use liwb::parser::*;
 use liwb::utils::*;
 
@@ -205,5 +206,24 @@ fn out_of_bounds_vector_index() {
             .take(1)
             .collect::<Vec<_>>(),
         vec![Literal::Void],
+    );
+}
+
+#[test]
+fn functions() {
+    let source = read_file("liwb/functions.liwb").unwrap();
+    let literals = parse(lexer(&source)).unwrap();
+    assert_eq!(
+        eval_from_literals(literals)
+            .unwrap()
+            .into_iter()
+            .rev()
+            .take(3)
+            .collect::<Vec<_>>(),
+        vec![
+            Literal::Number(0.0),
+            Literal::String("Name".to_string()),
+            Literal::Number(-140.0),
+        ],
     );
 }

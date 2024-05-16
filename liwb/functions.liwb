@@ -11,6 +11,13 @@
 (fn return-name []
     ("Name"))
 
-(opp x 5) 
-(return-name)
+(fn callback [function should-call] 
+    (if should-call 
+        (function)
+        0))
+
+(define numbers [1 2 3 4 5])
+
+(opp x (nth numbers 4)) 
+(callback return-name true)
 (opp 5 0)
