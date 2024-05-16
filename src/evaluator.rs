@@ -148,14 +148,10 @@ fn eval_if(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, Str
         ));
     };
 
-    let left = eval_literal(left.clone(), variables)?;
-    let right = eval_literal(right.clone(), variables)?;
-
     if statement {
-        Ok(left)
-    } else {
-        Ok(right)
-    }
+        return eval_literal(left.clone(), variables);
+    }  
+    return eval_literal(right.clone(), variables);
 }
 
 fn define_variable(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {

@@ -218,12 +218,14 @@ fn functions() {
             .unwrap()
             .into_iter()
             .rev()
-            .take(3)
+            .take(4)
+            .rev()
             .collect::<Vec<_>>(),
         vec![
-            Literal::Number(0.0),
-            Literal::String("Name".to_string()),
             Literal::Number(-140.0),
+            Literal::String("Name".to_string()),
+            Literal::Number(0.0),
+            Literal::Number(10.0),
         ],
     );
 }

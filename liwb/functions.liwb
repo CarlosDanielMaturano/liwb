@@ -16,8 +16,14 @@
         (function)
         0))
 
+(fn recursive [n times-called]
+    (if (= n 5)
+        (times-called)
+        (recursive (+ n 1) (+ 1 times-called))))
+
 (define numbers [1 2 3 4 5])
 
 (opp x (nth numbers 4)) 
 (callback return-name true)
 (opp 5 0)
+(recursive -5 0)
