@@ -11,6 +11,7 @@ pub fn eval_operation(list: Vec<Literal>, variables: &mut Variables) -> Result<L
     };
     match operator.as_str() {
         "nth" => eval_nth(list, variables),
+        "join" => eval_join(list, variables),
         _ => todo!(),
     }
 }
@@ -41,4 +42,28 @@ pub fn eval_nth(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal
     };
     let index: usize = index.round() as usize;
     Ok(v.into_iter().nth(index).unwrap_or(Literal::Void))
+}
+
+pub fn eval_join(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> { 
+    let mut list = list.into_iter().skip(1);
+    let vector_name = list
+        .next()
+        .ok_or(format!("Error. Could not get the name of the vector!"))?;
+    let vector = eval_literal(vector_name, variables)?;
+    let Literal::Vector(vector) = vector else {
+        return Err(format!(
+            "Error. Expected join fist argument to bet Literal::Vector, found: {:?}", 
+            vector
+        ))
+    };
+
+    let list = list
+        .map(|literal| eval_literal(literal, variables))
+        .collect::<Result<Vec<_>, String>>()?
+        .into_iter();
+
+    Ok(Literal::Vector(vector
+        .into_iter()
+        .chain(list)
+        .collect::<Vec<_>>()))
 }

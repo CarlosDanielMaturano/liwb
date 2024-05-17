@@ -262,3 +262,33 @@ fn relational_operators() {
         ],
     );
 }
+
+#[test]
+fn vectors() {
+    let source = read_file("liwb/vectors.liwb").unwrap();
+    let literals = parse(lexer(&source)).unwrap();
+    assert_eq!(
+        eval_from_literals(literals)
+            .unwrap()
+            .into_iter()
+            .rev()
+            .take(5)
+            .collect::<Vec<_>>(),
+        vec![
+            Literal::Vector(vec![
+                Literal::Number(1.0),
+                Literal::Number(3.0),
+                Literal::Number(5.0),
+                Literal::Vector(vec![
+                    Literal::Number(2.0),
+                    Literal::Number(4.0),
+                    Literal::Number(6.0),
+                ])
+            ]),
+            Literal::Number(2.0),
+            Literal::Void,
+            Literal::Number(4.0),
+            Literal::Number(5.0),
+        ],
+    );
+}

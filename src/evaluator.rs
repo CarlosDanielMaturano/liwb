@@ -10,7 +10,7 @@ const SINGLE_MATH_OPERATORS: [&'static str; 9] = [
     "sqrt", "sin", "cos", "tan", "abs", "log10", "floor", "ceil", "round",
 ];
 
-const VECTOR_OPERATORS: [&'static str; 2] = ["nth", "push"];
+const VECTOR_OPERATORS: [&'static str; 2] = ["nth", "join"];
 
 pub fn eval_from_literals(literals: Vec<Literal>) -> Result<Vec<Literal>, String> {
     let mut variables: Variables = HashMap::new();

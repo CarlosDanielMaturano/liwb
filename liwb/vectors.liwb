@@ -1,0 +1,11 @@
+(define vectorA
+    [1 3 5])
+
+(define vectorB
+    [2 4 6])
+
+(nth vectorA 2)
+(nth vectorB 1)
+(nth vectorA 1000)
+(nth vectorB -1)
+(join vectorA vectorB)
