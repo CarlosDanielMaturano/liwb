@@ -8,6 +8,7 @@ pub fn single_operator(list: Vec<Literal>, variables: &mut Variables) -> Result<
             list
         ));
     };
+
     let Literal::Number(n) = eval_literal(left.clone(), variables)? else {
         return Err(format!(
             "Error: Could not complete sqrt evaluation, expected Literal::Number, found {:?}",

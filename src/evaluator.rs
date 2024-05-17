@@ -124,24 +124,40 @@ fn eval_binary_operator(list: Vec<Literal>, variables: &mut Variables) -> Result
             operator
         ));
     };
+    let list = list.collect();
     match operator {
-        Operator::Equal => eval_equal(list.collect(), variables),
+        Operator::Equal => eval_equal(list, variables),
+        Operator::LessThan => eval_less_than(list, variables),
+        _ => todo!(),
     }
 }
 
 fn eval_equal(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
-    let [left, right] = &list[..2] else { todo!() };
-    let left = eval_literal(left.clone(), variables);
-    let right = eval_literal(right.clone(), variables);
+    let mut list = list.into_iter();
+    let left = list.next()
+        .ok_or(format!("Missing left side for equal operatiorn"))?;
+
+    let right = list.next()
+        .ok_or(format!("Missing right side for equal operatiorn"))?;
+
+    let left = eval_literal(left, variables)?;
+    let right = eval_literal(right, variables)?;
     Ok(Literal::Boolean(left == right))
 }
 
 fn eval_if(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
-    let [statement, left, right] = &list[1..4] else {
-        return Err(format!("Error. To few arguments to IF."));
-    };
+    let mut list = list.into_iter().skip(1);
 
-    let Ok(Literal::Boolean(statement)) = eval_literal(statement.clone(), variables) else {
+    let statement = list.next()
+        .ok_or(format!("Missing boolean statement for IF"))?;
+
+    let left = list.next()
+        .ok_or(format!("Missing left side for IF"))?;
+
+    let right = list.next()
+        .ok_or(format!("Missing  right side of IF"))?;
+
+    let Literal::Boolean(statement) = eval_literal(statement.clone(), variables)? else {
         return Err(format!(
             "Error: expected Literal::Boolean. Found {:?}",
             statement
@@ -150,15 +166,60 @@ fn eval_if(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, Str
 
     if statement {
         return eval_literal(left.clone(), variables);
-    }  
+    }
     return eval_literal(right.clone(), variables);
 }
 
 fn define_variable(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
-    let [Literal::Symbol(name), literal] = &list[1..=2] else {
-        return Err(format!("Missing arguments for variable definition"));
+    let mut list = list.into_iter().skip(1);
+
+    let name = list
+        .next()
+        .ok_or(format!("Error. Missing variable name for definition"))?;
+
+    let Literal::Symbol(name) = name else {
+        return Err(format!(
+            "Error. Expected Literal::Symbol for variable name, found: {:?}", 
+            name
+        ))
     };
+    
+    let literal = list
+        .next()
+        .ok_or(format!("Error. Missing literal value for variable definition."))?;
+
     let literal = eval_literal(literal.clone(), variables)?;
+
     variables.insert(name.to_string(), literal);
+
     Ok(Literal::Void)
+}
+
+fn eval_less_than(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
+    let list_size = list.len();
+    if list_size != 2 {
+        return Err(format!(
+            "Error. Wrong number of arguments for less than. Expected 3, found: {list_size}"
+        ));
+    }
+    let mut list = list.into_iter();
+
+    let left = list
+        .next()
+        .ok_or(format!("Error. Missing left value for operation"))?;
+
+    let left = eval_literal(left, variables)?;
+    let Literal::Number(left) = left else {
+        return Err(format!("Error. Expected Literal::Number for left side, found: {:?}", left))
+    };
+
+    let right = list
+        .next()
+        .ok_or(format!("Error. Missing left value for operation"))?;
+    let right = eval_literal(right, variables)?;
+    let Literal::Number(right) = right else {
+        return Err(format!("Error. Expected Literal::Number for left side, found: {:?}", left))
+    };
+
+    Ok(Literal::Boolean(left < right)) 
 }

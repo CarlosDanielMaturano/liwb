@@ -229,3 +229,18 @@ fn functions() {
         ],
     );
 }
+
+#[test]
+fn fibonnaci_function() {
+    let source = read_file("liwb/fibonnaci_function.liwb").unwrap();
+    let literals = parse(lexer(&source)).unwrap();
+    assert_eq!(
+        eval_from_literals(literals)
+            .unwrap()
+            .into_iter()
+            .rev()
+            .take(1)
+            .collect::<Vec<_>>(),
+        vec![Literal::Number(3.0),],
+    );
+}

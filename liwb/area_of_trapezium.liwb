@@ -2,5 +2,7 @@
 (define side-b 10)
 (define height 4)
 
-(define result (/ (* (+ side-a side-b) height) 2))
-(result)
+(fn area-of-trapezium [a b height]
+    (/ (* (+ a b) height) 2))
+
+(area-of-trapezium side-a side-b height)

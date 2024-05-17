@@ -1,0 +1,8 @@
+(fn nth-fib [n]
+    (if (< n 3)
+        (if (= n 1) 
+            0
+            1)
+        (+ (nth-fib (- n 1)) (nth-fib (- n 2)))))
+
+(nth-fib 5)

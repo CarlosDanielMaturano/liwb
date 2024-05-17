@@ -30,6 +30,8 @@ fn parse_tokens(tokens: &mut PeekableTokens) -> Result<Literal, String> {
                 "*" => literals.push(Literal::MathOperator(MathOperators::Multiply)),
                 "/" => literals.push(Literal::MathOperator(MathOperators::Divide)),
                 "=" => literals.push(Literal::BinaryOperator(Operator::Equal)),
+                "<" => literals.push(Literal::BinaryOperator(Operator::LessThan)),
+                ">" => literals.push(Literal::BinaryOperator(Operator::BiggerThan)),
                 "true" => literals.push(Literal::Boolean(true)),
                 "false" => literals.push(Literal::Boolean(false)),
                 "if" => literals.push(Literal::If),

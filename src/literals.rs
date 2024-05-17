@@ -9,6 +9,8 @@ pub enum MathOperators {
 #[derive(Debug, PartialEq, Clone)]
 pub enum Operator {
     Equal,
+    LessThan,
+    BiggerThan,
 }
 
 #[derive(Debug, PartialEq, Clone)]

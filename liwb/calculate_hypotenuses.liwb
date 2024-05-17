@@ -1,4 +1,7 @@
 (define a 3)
 (define b 4)
 
-(sqrt (+ (* a a) (* b b)))
+(fn hypotenuses [a b ]
+    (sqrt (+ (* a a) (* b b))))
+
+(hypotenuses a b)
