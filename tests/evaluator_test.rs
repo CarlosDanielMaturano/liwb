@@ -272,9 +272,14 @@ fn vectors() {
             .unwrap()
             .into_iter()
             .rev()
-            .take(5)
+            .take(6)
             .collect::<Vec<_>>(),
         vec![
+            Literal::Vector(
+                (1..=10)
+                    .map(|n| Literal::Number(n as f64))
+                    .collect()
+            ),
             Literal::Vector(vec![
                 Literal::Number(1.0),
                 Literal::Number(3.0),

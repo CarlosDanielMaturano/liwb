@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use crate::evaluator::*;
 use crate::literals::*;
 

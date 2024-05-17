@@ -2,12 +2,19 @@ use crate::evaluator::*;
 use crate::literals::*;
 
 pub fn single_operator(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
-    let [Literal::Symbol(operator), left] = &list[..=1] else {
+    let mut list = list.into_iter();
+    let operator = list.next().ok_or(format!("Error. Missing opeator"))?;
+
+    let Literal::Symbol(operator) = operator else {
         return Err(format!(
-            "Missing operators! Expected Literal::Operator Literal::Number, found: {:?}",
-            list
+            "Error. Expected Literal::Symbol for operator, found: {:?}",
+            operator
         ));
     };
+
+    let left = list
+        .next()
+        .ok_or(format!("Error. Could not get left side for opertion."))?;
 
     let Literal::Number(n) = eval_literal(left.clone(), variables)? else {
         return Err(format!(

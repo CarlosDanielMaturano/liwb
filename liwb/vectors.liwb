@@ -4,8 +4,12 @@
 (define vectorB
     [2 4 6])
 
+(define numbers-from-1-to-10 
+    (range 1 10))
+
 (nth vectorA 2)
 (nth vectorB 1)
 (nth vectorA 1000)
 (nth vectorB -1)
 (join vectorA vectorB)
+(numbers-from-1-to-10)

@@ -10,7 +10,7 @@ const SINGLE_MATH_OPERATORS: [&'static str; 9] = [
     "sqrt", "sin", "cos", "tan", "abs", "log10", "floor", "ceil", "round",
 ];
 
-const VECTOR_OPERATORS: [&'static str; 2] = ["nth", "join"];
+const VECTOR_OPERATORS: [&'static str; 3] = ["nth", "join", "range"];
 
 pub fn eval_from_literals(literals: Vec<Literal>) -> Result<Vec<Literal>, String> {
     let mut variables: Variables = HashMap::new();
@@ -130,26 +130,24 @@ fn eval_binary_operator(list: Vec<Literal>, variables: &mut Variables) -> Result
         .collect();
 
     match operator {
-        Operator::Equal 
+        Operator::Equal
         | Operator::LessThan
         | Operator::BiggerThan
         | Operator::LessOrEqualThan
-        | Operator::BiggerOrEqualThan
-        => eval_relation_operator(list, variables),
+        | Operator::BiggerOrEqualThan => eval_relation_operator(list, variables),
     }
 }
 
 fn eval_if(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
     let mut list = list.into_iter().skip(1);
 
-    let statement = list.next()
+    let statement = list
+        .next()
         .ok_or(format!("Missing boolean statement for IF"))?;
 
-    let left = list.next()
-        .ok_or(format!("Missing left side for IF"))?;
+    let left = list.next().ok_or(format!("Missing left side for IF"))?;
 
-    let right = list.next()
-        .ok_or(format!("Missing  right side of IF"))?;
+    let right = list.next().ok_or(format!("Missing  right side of IF"))?;
 
     let Literal::Boolean(statement) = eval_literal(statement.clone(), variables)? else {
         return Err(format!(
@@ -173,14 +171,14 @@ fn define_variable(list: Vec<Literal>, variables: &mut Variables) -> Result<Lite
 
     let Literal::Symbol(name) = name else {
         return Err(format!(
-            "Error. Expected Literal::Symbol for variable name, found: {:?}", 
+            "Error. Expected Literal::Symbol for variable name, found: {:?}",
             name
-        ))
+        ));
     };
-    
-    let literal = list
-        .next()
-        .ok_or(format!("Error. Missing literal value for variable definition."))?;
+
+    let literal = list.next().ok_or(format!(
+        "Error. Missing literal value for variable definition."
+    ))?;
 
     let literal = eval_literal(literal.clone(), variables)?;
 
@@ -189,7 +187,10 @@ fn define_variable(list: Vec<Literal>, variables: &mut Variables) -> Result<Lite
     Ok(Literal::Void)
 }
 
-fn eval_relation_operator(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
+fn eval_relation_operator(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+) -> Result<Literal, String> {
     let list_size = list.len();
     if list_size != 3 {
         return Err(format!(
@@ -199,20 +200,20 @@ fn eval_relation_operator(list: Vec<Literal>, variables: &mut Variables) -> Resu
 
     let mut list = list.into_iter();
 
-    let operator = list
-        .next()
-        .ok_or(format!("Error. Missing operator for the relational operation"))?;
+    let operator = list.next().ok_or(format!(
+        "Error. Missing operator for the relational operation"
+    ))?;
 
     let Literal::BinaryOperator(operator) = operator else {
         return Err(format!(
             "Error. Expected Literal::BinaryOperator for the operator, found: {:?} ",
-           list 
-        ))
+            list
+        ));
     };
 
-    let left = list
-        .next()
-        .ok_or(format!("Error. Missing left value for the relational operation"))?;
+    let left = list.next().ok_or(format!(
+        "Error. Missing left value for the relational operation"
+    ))?;
     let left = eval_literal(left, variables)?;
 
     let right = list
@@ -220,12 +221,11 @@ fn eval_relation_operator(list: Vec<Literal>, variables: &mut Variables) -> Resu
         .ok_or(format!("Error. Missing left value for operation"))?;
     let right = eval_literal(right, variables)?;
 
-
     Ok(Literal::Boolean(match operator {
         Operator::Equal => left == right,
         Operator::LessThan => left < right,
         Operator::BiggerThan => left > right,
         Operator::LessOrEqualThan => left <= right,
         Operator::BiggerOrEqualThan => left >= right,
-    })) 
+    }))
 }
