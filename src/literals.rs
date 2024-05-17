@@ -1,4 +1,4 @@
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, PartialOrd)]
 pub enum MathOperators {
     Add,
     Subtract,
@@ -6,14 +6,16 @@ pub enum MathOperators {
     Divide,
 }
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, PartialOrd)]
 pub enum Operator {
     Equal,
     LessThan,
     BiggerThan,
+    LessOrEqualThan,
+    BiggerOrEqualThan,
 }
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, PartialOrd)]
 pub enum Literal {
     Void,
     List(Vec<Literal>),

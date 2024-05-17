@@ -124,25 +124,19 @@ fn eval_binary_operator(list: Vec<Literal>, variables: &mut Variables) -> Result
             operator
         ));
     };
-    let list = list.collect();
+    let list = vec![Literal::BinaryOperator(operator.clone())]
+        .into_iter()
+        .chain(list)
+        .collect();
+
     match operator {
-        Operator::Equal => eval_equal(list, variables),
-        Operator::LessThan => eval_less_than(list, variables),
-        _ => todo!(),
+        Operator::Equal 
+        | Operator::LessThan
+        | Operator::BiggerThan
+        | Operator::LessOrEqualThan
+        | Operator::BiggerOrEqualThan
+        => eval_relation_operator(list, variables),
     }
-}
-
-fn eval_equal(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
-    let mut list = list.into_iter();
-    let left = list.next()
-        .ok_or(format!("Missing left side for equal operatiorn"))?;
-
-    let right = list.next()
-        .ok_or(format!("Missing right side for equal operatiorn"))?;
-
-    let left = eval_literal(left, variables)?;
-    let right = eval_literal(right, variables)?;
-    Ok(Literal::Boolean(left == right))
 }
 
 fn eval_if(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
@@ -195,31 +189,43 @@ fn define_variable(list: Vec<Literal>, variables: &mut Variables) -> Result<Lite
     Ok(Literal::Void)
 }
 
-fn eval_less_than(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
+fn eval_relation_operator(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
     let list_size = list.len();
-    if list_size != 2 {
+    if list_size != 3 {
         return Err(format!(
-            "Error. Wrong number of arguments for less than. Expected 3, found: {list_size}"
+            "Error. Wrong number of arguments for relational operation. Expected 3, found: {list_size}"
         ));
     }
+
     let mut list = list.into_iter();
+
+    let operator = list
+        .next()
+        .ok_or(format!("Error. Missing operator for the relational operation"))?;
+
+    let Literal::BinaryOperator(operator) = operator else {
+        return Err(format!(
+            "Error. Expected Literal::BinaryOperator for the operator, found: {:?} ",
+           list 
+        ))
+    };
 
     let left = list
         .next()
-        .ok_or(format!("Error. Missing left value for operation"))?;
-
+        .ok_or(format!("Error. Missing left value for the relational operation"))?;
     let left = eval_literal(left, variables)?;
-    let Literal::Number(left) = left else {
-        return Err(format!("Error. Expected Literal::Number for left side, found: {:?}", left))
-    };
 
     let right = list
         .next()
         .ok_or(format!("Error. Missing left value for operation"))?;
     let right = eval_literal(right, variables)?;
-    let Literal::Number(right) = right else {
-        return Err(format!("Error. Expected Literal::Number for left side, found: {:?}", left))
-    };
 
-    Ok(Literal::Boolean(left < right)) 
+
+    Ok(Literal::Boolean(match operator {
+        Operator::Equal => left == right,
+        Operator::LessThan => left < right,
+        Operator::BiggerThan => left > right,
+        Operator::LessOrEqualThan => left <= right,
+        Operator::BiggerOrEqualThan => left >= right,
+    })) 
 }

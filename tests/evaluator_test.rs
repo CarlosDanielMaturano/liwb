@@ -244,3 +244,21 @@ fn fibonnaci_function() {
         vec![Literal::Number(3.0),],
     );
 }
+
+#[test]
+fn relational_operators() {
+    let source = read_file("liwb/relational_operators.liwb").unwrap();
+    let literals = parse(lexer(&source)).unwrap();
+    assert_eq!(
+        eval_from_literals(literals)
+            .unwrap()
+            .into_iter()
+            .collect::<Vec<_>>(),
+        vec![
+            Literal::Boolean(true),
+            Literal::Boolean(false),
+            Literal::Boolean(true),
+            Literal::Boolean(false),
+        ],
+    );
+}
