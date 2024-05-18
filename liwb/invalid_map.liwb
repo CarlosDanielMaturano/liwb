@@ -1,0 +1,3 @@
+(define numbers (range 0 100))
+
+(map +1 numbers)

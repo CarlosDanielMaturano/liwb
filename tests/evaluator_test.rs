@@ -322,3 +322,11 @@ fn fibonnaci_vector() {
         ])],
     );
 }
+
+#[test]
+#[should_panic]
+fn invalid_map() {
+    let source = read_file("liwb/invalid_map.liwb").unwrap();
+    let literals = parse(lexer(&source)).unwrap();
+    eval_from_literals(literals).unwrap();
+}

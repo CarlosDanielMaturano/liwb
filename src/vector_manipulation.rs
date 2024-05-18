@@ -112,14 +112,30 @@ fn eval_map(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, St
     }
     let mut list = list.into_iter().skip(1);
 
-    let function = list
+    let function_name = list
         .next()
         .ok_or(format!("Error. Missing function parameter for map."))?;
+
+
+    let Literal::Symbol(s) = &function_name else {
+        return Err(format!(
+            "Error. Expected Literal::Symbol for function name in map, found: {:?}", 
+            function_name
+        ));
+    };
+    let function = variables.get(s);
+    let Some(Literal::Function{ .. }) = function else {
+        return Err(format!(
+            "Error. Expected Literal::Function, found: {:?}",
+            function 
+        ));
+    };
 
     let vector = list
         .next()
         .ok_or(format!("Error. Missing vector parameter for map."))?;
 
+    
     let Literal::Vector(vector) = eval_literal(vector.clone(), variables)? else {
         return Err(format!(
             "Error. Expected Literal::Vector, found: {:?}",
@@ -127,12 +143,13 @@ fn eval_map(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, St
         ));
     };
 
-    Ok(Literal::Vector(
+    Ok(
+        Literal::Vector(
         vector
             .into_iter()
             .map(|parameter| {
                 eprintln!("{:?}", parameter);
-                let list = Literal::List(vec![function.clone(), parameter]);
+                let list = Literal::List(vec![function_name.clone(), parameter]);
                 eval_literal(list, variables)
             })
             .collect::<Result<Vec<_>, String>>()?,
