@@ -53,7 +53,7 @@ fn parse_tokens(tokens: &mut PeekableTokens) -> Result<Literal, String> {
             Token::LBracket => {
                 let result = match parse_tokens(tokens)? {
                     Literal::List(list) => list,
-                    Literal::Void => vec![Literal::Void],
+                    Literal::Void => vec![],
                     result => {
                         return Err(format!(
                             "Expected LIteral::List or Literal::Void for Vector. found: {:?}",

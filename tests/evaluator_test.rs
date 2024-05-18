@@ -330,3 +330,18 @@ fn invalid_map() {
     let literals = parse(lexer(&source)).unwrap();
     eval_from_literals(literals).unwrap();
 }
+
+#[test]
+fn aoc_2020_1() {
+    let source = read_file("liwb/aoc_2020_1.liwb").unwrap();
+    let literals = parse(lexer(&source)).unwrap();
+    assert_eq!(
+        eval_from_literals(literals)
+            .unwrap()
+            .into_iter()
+            .rev()
+            .take(1)
+            .collect::<Vec<_>>(),
+        vec![Literal::Number(514579.0),]
+    );
+}
