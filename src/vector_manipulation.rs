@@ -13,11 +13,12 @@ pub fn eval_operation(list: Vec<Literal>, variables: &mut Variables) -> Result<L
         "nth" => eval_nth(list, variables),
         "join" => eval_join(list, variables),
         "range" => eval_range(list, variables),
-        _ => todo!(),
+        "map" => eval_map(list, variables),
+        operator => return Err(format!("Unknow type of vector operation {operator}")),
     }
 }
 
-pub fn eval_nth(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
+fn eval_nth(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
     if list.len() != 3 {
         return Err(format!("Missing arguments for nth"));
     }
@@ -45,7 +46,7 @@ pub fn eval_nth(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal
     Ok(v.into_iter().nth(index).unwrap_or(Literal::Void))
 }
 
-pub fn eval_join(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
+fn eval_join(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
     let mut list = list.into_iter().skip(1);
     let vector_name = list
         .next()
@@ -68,7 +69,7 @@ pub fn eval_join(list: Vec<Literal>, variables: &mut Variables) -> Result<Litera
     ))
 }
 
-pub fn eval_range(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
+fn eval_range(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
     let mut list = list.into_iter().skip(1);
     let start = eval_literal(
         list.next()
@@ -77,9 +78,9 @@ pub fn eval_range(list: Vec<Literal>, variables: &mut Variables) -> Result<Liter
     )?;
     let Literal::Number(start) = start else {
         return Err(format!(
-            "Error. Expected start to be Literal::Number, found: {:?}", 
+            "Error. Expected start to be Literal::Number, found: {:?}",
             start
-        ))
+        ));
     };
 
     let end = eval_literal(
@@ -89,9 +90,9 @@ pub fn eval_range(list: Vec<Literal>, variables: &mut Variables) -> Result<Liter
     )?;
     let Literal::Number(end) = end else {
         return Err(format!(
-            "Error. Expected end to be Literal::Number, found: {:?}", 
+            "Error. Expected end to be Literal::Number, found: {:?}",
             start
-        ))
+        ));
     };
     let start = start as i64;
     let end = end as i64;
@@ -100,4 +101,40 @@ pub fn eval_range(list: Vec<Literal>, variables: &mut Variables) -> Result<Liter
         .collect::<Vec<_>>();
 
     Ok(Literal::Vector(range))
+}
+
+fn eval_map(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
+    if list.len() != 3 {
+        return Err(format!(
+            "Erro. Wrong number of arguments passed to map. Expected 3, found {}",
+            list.len()
+        ));
+    }
+    let mut list = list.into_iter().skip(1);
+
+    let function = list
+        .next()
+        .ok_or(format!("Error. Missing function parameter for map."))?;
+
+    let vector = list
+        .next()
+        .ok_or(format!("Error. Missing vector parameter for map."))?;
+
+    let Literal::Vector(vector) = eval_literal(vector.clone(), variables)? else {
+        return Err(format!(
+            "Error. Expected Literal::Vector, found: {:?}",
+            vector
+        ));
+    };
+
+    Ok(Literal::Vector(
+        vector
+            .into_iter()
+            .map(|parameter| {
+                eprintln!("{:?}", parameter);
+                let list = Literal::List(vec![function.clone(), parameter]);
+                eval_literal(list, variables)
+            })
+            .collect::<Result<Vec<_>, String>>()?,
+    ))
 }

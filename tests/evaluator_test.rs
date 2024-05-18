@@ -275,11 +275,7 @@ fn vectors() {
             .take(6)
             .collect::<Vec<_>>(),
         vec![
-            Literal::Vector(
-                (1..=10)
-                    .map(|n| Literal::Number(n as f64))
-                    .collect()
-            ),
+            Literal::Vector((1..=10).map(|n| Literal::Number(n as f64)).collect()),
             Literal::Vector(vec![
                 Literal::Number(1.0),
                 Literal::Number(3.0),
@@ -295,5 +291,34 @@ fn vectors() {
             Literal::Number(4.0),
             Literal::Number(5.0),
         ],
+    );
+}
+
+#[test]
+fn fibonnaci_vector() {
+    let source = read_file("liwb/fibonnaci_vector.liwb").unwrap();
+    let literals = parse(lexer(&source)).unwrap();
+    assert_eq!(
+        eval_from_literals(literals)
+            .unwrap()
+            .into_iter()
+            .rev()
+            .take(1)
+            .collect::<Vec<_>>(),
+        vec![Literal::Vector(vec![
+            Literal::Number(0.0),
+            Literal::Number(1.0),
+            Literal::Number(1.0),
+            Literal::Number(2.0),
+            Literal::Number(3.0),
+            Literal::Number(5.0),
+            Literal::Number(8.0),
+            Literal::Number(13.0),
+            Literal::Number(21.0),
+            Literal::Number(34.0),
+            Literal::Number(55.0),
+            Literal::Number(89.0),
+            Literal::Number(144.0)
+        ])],
     );
 }

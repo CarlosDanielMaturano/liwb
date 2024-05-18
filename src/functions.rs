@@ -39,19 +39,12 @@ pub fn define_function(list: Vec<Literal>, variables: &mut Variables) -> Result<
 
     let body = list
         .next()
-        .ok_or(format!("Error. Could not get function's body."))?;
-
-    let Literal::List(body) = body else {
-        return Err(format!(
-            "Error. Expected function's body to be of type Literal::List, found: {:?}",
-            body
-        ));
-    };
+        .ok_or(format!("Error. Missing body of the function."))?;
 
     let function = Literal::Function {
         name: name.clone(),
         args,
-        body: Box::new(Literal::List(body)),
+        body: Box::new(body),
     };
 
     variables.insert(name, function);

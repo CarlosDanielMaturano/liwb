@@ -1,6 +1,7 @@
-use crate::functions::eval_function;
+use crate::functions::*;
 use crate::literals::*;
-use crate::{functions::define_function, math_functions::*, vector_manipulation::*};
+use crate::math_functions::*;
+use crate::vector_manipulation::*;
 
 use std::collections::HashMap;
 
@@ -10,7 +11,7 @@ const SINGLE_MATH_OPERATORS: [&'static str; 9] = [
     "sqrt", "sin", "cos", "tan", "abs", "log10", "floor", "ceil", "round",
 ];
 
-const VECTOR_OPERATORS: [&'static str; 3] = ["nth", "join", "range"];
+const VECTOR_OPERATORS: [&'static str; 4] = ["nth", "join", "range", "map"];
 
 pub fn eval_from_literals(literals: Vec<Literal>) -> Result<Vec<Literal>, String> {
     let mut variables: Variables = HashMap::new();
@@ -65,7 +66,7 @@ fn eval_list(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, S
             }
         },
         Literal::String(_) | Literal::Boolean(_) | Literal::Number(_) => Ok(head),
-        Literal::Function { .. } => todo!(),
+        Literal::Function { .. } => Ok(head),
     }
 }
 
@@ -92,15 +93,15 @@ fn eval_math_operator(list: Vec<Literal>, variables: &mut Variables) -> Result<L
     };
 
     list.try_fold(Literal::Number(head), |acc, literal| {
-        let literal = eval_literal(literal, variables);
-        let Ok(Literal::Number(n)) = literal else {
+        let literal = eval_literal(literal, variables)?;
+        let Literal::Number(n) = literal else {
             return Err(format!(
                 "Error. Expected Literal::Number for the literal, found {:?}",
                 literal
             ));
         };
-        let acc = eval_literal(acc, variables);
-        let Ok(Literal::Number(acc)) = acc else {
+        let acc = eval_literal(acc, variables)?;
+        let Literal::Number(acc) = acc else {
             return Err(format!(
                 "Error. Expected Literal::Number for the acumulator, found {:?}",
                 acc
