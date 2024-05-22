@@ -1,7 +1,10 @@
 use crate::evaluator::*;
 use crate::literals::*;
 
-pub fn eval_operation(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
+pub fn eval_vector_operation(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+) -> Result<Literal, String> {
     let operator = &list[0];
     let Literal::Symbol(operator) = operator else {
         return Err(format!(
@@ -198,6 +201,6 @@ fn eval_filter(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal,
                 let list = Literal::List(vec![function_name.clone(), parameter.clone()]);
                 Ok(Literal::Boolean(true)) == eval_literal(list, variables)
             })
-            .collect::<Vec<_>>()
+            .collect::<Vec<_>>(),
     ))
 }

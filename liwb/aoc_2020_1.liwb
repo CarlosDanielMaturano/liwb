@@ -1,28 +1,15 @@
-(define numbers [
-    979
-    366
-    299
-    675
-    1456
-    1721
-])
-
-(define b (nth numbers 0))
-
+(define numbers [ 979 366 299 675 1456 1721])
+(define pinned (nth numbers 0))
 (fn check-result [a]
-    (if (= 2020 (+ a b))
-        (* a b)
+    (if (= 2020 (+ a pinned))
+        (* a pinned)
         ()))
-
 (fn ifinite-call [arg]
-    (if (= false (define b arg))
+    (if (= false (define pinned arg))
         ()
         (map check-result numbers)))
-
-
-(fn check-if-not-empty [arg]
+(fn check-if-vector-is-not-empty [arg]
     (if (= arg [])
         false
         true))
-
-(nth (nth (filter check-if-not-empty (map ifinite-call numbers)) 0) 0)
+(nth (nth (filter check-if-vector-is-not-empty (map ifinite-call numbers)) 0) 0)

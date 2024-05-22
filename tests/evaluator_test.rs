@@ -345,3 +345,39 @@ fn aoc_2020_1() {
         vec![Literal::Number(514579.0),]
     );
 }
+
+#[test]
+fn fizz_buzz() {
+    let source = read_file("liwb/fizzbuzz.liwb").unwrap();
+    let literals = parse(lexer(&source)).unwrap();
+    assert_eq!(
+        eval_from_literals(literals)
+            .unwrap()
+            .into_iter()
+            .rev()
+            .take(1)
+            .collect::<Vec<_>>(),
+        vec![Literal::Vector(vec![
+            Literal::Number(1.0),
+            Literal::Number(2.0),
+            Literal::String("Fizz".to_string()),
+            Literal::Number(4.0),
+            Literal::String("Buzz".to_string()),
+            Literal::String("Fizz".to_string()),
+            Literal::Number(7.0),
+            Literal::Number(8.0),
+            Literal::String("Fizz".to_string()),
+            Literal::String("Buzz".to_string()),
+            Literal::Number(11.0),
+            Literal::String("Fizz".to_string()),
+            Literal::Number(13.0),
+            Literal::Number(14.0),
+            Literal::String("FizzBuzz".to_string()),
+            Literal::Number(16.0),
+            Literal::Number(17.0),
+            Literal::String("Fizz".to_string()),
+            Literal::Number(19.0),
+            Literal::String("Buzz".to_string()),
+        ])]
+    );
+}

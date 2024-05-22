@@ -7,9 +7,11 @@ use std::collections::HashMap;
 
 pub type Variables = HashMap<String, Literal>;
 
-const SINGLE_MATH_OPERATORS: [&'static str; 9] = [
+const SINGLE_ARG_MATH_OPERATORS: [&'static str; 9] = [
     "sqrt", "sin", "cos", "tan", "abs", "log10", "floor", "ceil", "round",
 ];
+
+const DOUBLE_ARG_MATH_OPERATORS: [&'static str; 1] = ["mod"];
 
 const VECTOR_OPERATORS: [&'static str; 5] = ["nth", "join", "range", "map", "filter"];
 
@@ -52,8 +54,13 @@ fn eval_list(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, S
         Literal::Symbol(s) => match s.as_str() {
             "fn" => define_function(list, variables),
             "define" => define_variable(list, variables),
-            s if SINGLE_MATH_OPERATORS.contains(&s) => single_operator(list, variables),
-            s if VECTOR_OPERATORS.contains(&s) => eval_operation(list, variables),
+            s if SINGLE_ARG_MATH_OPERATORS.contains(&s) => {
+                eval_operator_with_single_arg(list, variables)
+            }
+            s if DOUBLE_ARG_MATH_OPERATORS.contains(&s) => {
+                eval_operator_with_double_argument(list, variables)
+            }
+            s if VECTOR_OPERATORS.contains(&s) => eval_vector_operation(list, variables),
             _ => {
                 if let Some(literal) = variables.get(&s) {
                     if let Literal::Function { .. } = literal {

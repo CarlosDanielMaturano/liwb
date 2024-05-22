@@ -1,0 +1,11 @@
+(fn fizz-buzz [number]
+    (if (= 0 (mod number 3))
+        (if (= 0 (mod number 5))
+                "FizzBuzz"
+                "Fizz")
+        (if (= 0 (mod number 5))
+            "Buzz"
+            number)))
+
+(define numbers (range 1 20))
+(map fizz-buzz numbers)
