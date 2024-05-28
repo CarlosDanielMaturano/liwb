@@ -1,0 +1,17 @@
+(fn fib [n]
+    (if (<= n 2)
+        (if (= n 1) 
+            0
+            1)
+        (+ (fib (- n 1)) (fib (- n 2)))))
+
+(fn fizz-buzz [number]
+    (if (= 0 (mod number 3))
+        (if (= 0 (mod number 5))
+                "FizzBuzz"
+                "Fizz")
+        (if (= 0 (mod number 5))
+            "Buzz"
+            number)))
+
+(print (map fizz-buzz (map fib (range 1 25))))
