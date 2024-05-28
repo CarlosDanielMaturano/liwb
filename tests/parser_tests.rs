@@ -5,14 +5,14 @@ use liwb::parser::*;
 #[test]
 fn empty_source_returns_void_object() {
     let source = "";
-    assert_eq!(parse(lexer(source)).unwrap()[0], Literal::Void);
+    assert_eq!(parser(lexer(source)).unwrap()[0], Literal::Void);
 }
 
 #[test]
 fn basic_arithmetic_operation() {
     let source = "(+ 1 2)";
     assert_eq!(
-        parse(lexer(source)).unwrap()[0],
+        parser(lexer(source)).unwrap()[0],
         Literal::List(vec![
             Literal::MathOperator(MathOperators::Add),
             Literal::Number(1.0),
@@ -25,7 +25,7 @@ fn basic_arithmetic_operation() {
 fn nested() {
     let source = "(+ 1 (+ 2 (+ 3 (+ 4 5))))";
     assert_eq!(
-        parse(lexer(source)).unwrap()[0],
+        parser(lexer(source)).unwrap()[0],
         Literal::List(vec![
             Literal::MathOperator(MathOperators::Add),
             Literal::Number(1.0),
@@ -50,7 +50,7 @@ fn nested() {
 fn arithmetic_operation_with_void_on_right() {
     let source = "(+ 1 ())";
     assert_eq!(
-        parse(lexer(source)).unwrap()[0],
+        parser(lexer(source)).unwrap()[0],
         Literal::List(vec![
             Literal::MathOperator(MathOperators::Add),
             Literal::Number(1.0),
@@ -63,7 +63,7 @@ fn arithmetic_operation_with_void_on_right() {
 fn arithmetic_operation_with_list_on_both_side() {
     let source = "(+ (+ 1 (* 2 3)) (* (/ 4 5) (- 6 7)))";
     assert_eq!(
-        parse(lexer(source)).unwrap()[0],
+        parser(lexer(source)).unwrap()[0],
         Literal::List(vec![
             Literal::MathOperator(MathOperators::Add),
             Literal::List(vec![
@@ -96,7 +96,7 @@ fn arithmetic_operation_with_list_on_both_side() {
 fn define_variable() {
     let source = "(define pi (/ 22 7))";
     assert_eq!(
-        parse(lexer(source)).unwrap()[0],
+        parser(lexer(source)).unwrap()[0],
         Literal::List(vec![
             Literal::Symbol("define".to_string()),
             Literal::Symbol("pi".to_string()),
@@ -113,7 +113,7 @@ fn define_variable() {
 fn multi_line_statement() {
     let source = "(define pi (/ 22 7))\n(define r 10)\n(define area-of-circle (* pi (* r r)))";
     assert_eq!(
-        parse(lexer(source)).unwrap(),
+        parser(lexer(source)).unwrap(),
         vec![
             Literal::List(vec![
                 Literal::Symbol("define".to_string()),
@@ -150,7 +150,7 @@ fn multi_line_statement() {
 fn boolean_variable() {
     let source = "(define x false)";
     assert_eq!(
-        parse(lexer(source)).unwrap()[0],
+        parser(lexer(source)).unwrap()[0],
         Literal::List(vec![
             Literal::Symbol("define".to_string()),
             Literal::Symbol("x".to_string()),
@@ -163,7 +163,7 @@ fn boolean_variable() {
 fn define_string_variable() {
     let source = "(define message \"Hello, World\")";
     assert_eq!(
-        parse(lexer(source)).unwrap()[0],
+        parser(lexer(source)).unwrap()[0],
         Literal::List(vec![
             Literal::Symbol("define".to_string()),
             Literal::Symbol("message".to_string()),
@@ -176,7 +176,7 @@ fn define_string_variable() {
 fn vector_definition() {
     let source = r#"(define numbers [1 "two" 3 "four" (+ 4 1)])"#;
     assert_eq!(
-        parse(lexer(source)).unwrap()[0],
+        parser(lexer(source)).unwrap()[0],
         Literal::List(vec![
             Literal::Symbol("define".to_string()),
             Literal::Symbol("numbers".to_string()),

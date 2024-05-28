@@ -1,7 +1,7 @@
 use crate::lexer::Token;
 use crate::literals::*;
 
-pub fn parse(tokens: Vec<Token>) -> Result<Vec<Literal>, String> {
+pub fn parser(tokens: Vec<Token>) -> Result<Vec<Literal>, String> {
     if tokens.is_empty() {
         return Ok(vec![Literal::Void]);
     }
