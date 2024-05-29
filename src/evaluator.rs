@@ -250,6 +250,22 @@ fn eval_print(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, 
         .collect::<Result<Vec<_>, String>>()?
         .into_iter()
         .for_each(|literal| {
+            let mut literal = literal;
+            if let Literal::String(ref s) = literal {
+                let regex = regex::Regex::new(r"\\(.)").unwrap();
+                let string = regex.replace_all(s, |capture: &regex::Captures| {
+                    match &capture[1] {
+                        "n" => "\n",
+                        "t" => "\t",
+                        "r" => "\r",
+                        _ => &capture[1],
+                    }
+                    .to_string()
+                })
+                .to_string();
+
+                literal = Literal::String(string);
+            }
             print!("{literal} ")
         });
     Ok(Literal::Void)
