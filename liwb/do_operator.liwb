@@ -1,0 +1,16 @@
+(fn show-name-with-age [name age]
+    (do
+        (if (= name "John")
+            (print "Oh, Hello, John")
+            (print "Hello," name))
+        (print "You are " age "years old")
+    ))
+
+(define josh "Josh")
+(define josh-age 22)
+
+(define john "John")
+(define john-age 24)
+
+(show-name-with-age josh josh-age)
+(show-name-with-age john john-age)

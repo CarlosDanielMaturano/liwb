@@ -55,6 +55,7 @@ fn eval_list(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, S
             "fn" => define_function(list, variables),
             "define" => define_variable(list, variables),
             "print" => eval_print(list, variables),
+            "do" => eval_do(list, variables),
             s if SINGLE_ARG_MATH_OPERATORS.contains(&s) => {
                 eval_operator_with_single_arg(list, variables)
             }
@@ -251,5 +252,16 @@ fn eval_print(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, 
         .for_each(|literal| {
             print!("{literal} ")
         });
+    Ok(Literal::Void)
+}
+
+fn eval_do(list: Vec<Literal>, variables: &mut Variables) -> Result<Literal, String> {
+    list
+        .into_iter()
+        .skip(1)
+        .map(|literal| {
+            eval_literal(literal, variables)
+        })
+        .collect::<Result<Vec<_>, String>>()?;
     Ok(Literal::Void)
 }
