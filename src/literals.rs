@@ -52,7 +52,7 @@ impl Display for Literal {
                     });
                     result += " ]";
                     result
-                },
+                }
                 Literal::Function { name, .. } => format!("(liwb function#{name})"),
                 Literal::Void | _ => "()".to_string(),
             }

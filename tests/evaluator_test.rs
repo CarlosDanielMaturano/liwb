@@ -381,3 +381,12 @@ fn fizz_buzz() {
         ])]
     );
 }
+
+
+#[test]
+#[should_panic]
+fn trying_to_use_deleted_literal() {
+    let source = read_file("liwb/deleted_literal.liwb").unwrap();
+    let literals = parser(lexer(&source)).unwrap();
+    eval_from_literals(literals).unwrap();
+}

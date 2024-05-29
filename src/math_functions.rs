@@ -4,6 +4,7 @@ use crate::literals::*;
 pub fn eval_operator_with_single_arg(
     list: Vec<Literal>,
     variables: &mut Variables,
+    deleted: &mut Vec<Literal>
 ) -> Result<Literal, String> {
     let mut list = list.into_iter();
     let operator = list.next().ok_or(format!("Error. Missing operator"))?;
@@ -19,7 +20,7 @@ pub fn eval_operator_with_single_arg(
         .next()
         .ok_or(format!("Error. Could not get left side for opertion."))?;
 
-    let Literal::Number(n) = eval_literal(left.clone(), variables)? else {
+    let Literal::Number(n) = eval_literal(left.clone(), variables, deleted)? else {
         return Err(format!(
             "Error: Could not complete sqrt evaluation, expected Literal::Number, found {:?}",
             left
@@ -40,10 +41,10 @@ pub fn eval_operator_with_single_arg(
     }))
 }
 
-
 pub fn eval_operator_with_double_argument(
     list: Vec<Literal>,
     variables: &mut Variables,
+    deleted: &mut Vec<Literal>
 ) -> Result<Literal, String> {
     let mut list = list.into_iter();
     let operator = list.next().ok_or(format!("Error. Missing operator"))?;
@@ -59,7 +60,7 @@ pub fn eval_operator_with_double_argument(
         .next()
         .ok_or(format!("Error. Could not get left side for opertion."))?;
 
-    let Literal::Number(left) = eval_literal(left.clone(), variables)? else {
+    let Literal::Number(left) = eval_literal(left.clone(), variables, deleted)? else {
         return Err(format!(
             "Error: Could not complete sqrt evaluation, expected Literal::Number, found {:?}",
             left
@@ -70,7 +71,7 @@ pub fn eval_operator_with_double_argument(
         .next()
         .ok_or(format!("Error. Could not get left side for opertion."))?;
 
-    let Literal::Number(right) = eval_literal(right.clone(), variables)? else {
+    let Literal::Number(right) = eval_literal(right.clone(), variables, deleted)? else {
         return Err(format!(
             "Error: Could not complete sqrt evaluation, expected Literal::Number, found {:?}",
             right

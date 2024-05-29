@@ -14,4 +14,7 @@
             "Buzz"
             number)))
 
-(print (map fizz-buzz (map fib (range 1 25))))
+(fn print-value [value] 
+    (print (str value "\n")))
+
+(map print-value (map fizz-buzz (map fib (range 1 26))))

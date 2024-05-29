@@ -1,9 +1,10 @@
 (fn show-name-with-age [name age]
     (do
         (if (= name "John")
-            (print "Oh, Hello, John\n")
-            (print "Hello," name "\n"))
-        (print "You are" age "years old\n")
+            (print (str "Oh, Hello, John"))
+            (print (str "Hello, " name ".")))
+        (print (str "\nYou are "  age " years old."))
+        (print "\n\r")
     ))
 
 (define josh "Josh")

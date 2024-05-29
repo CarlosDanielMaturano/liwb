@@ -55,10 +55,11 @@ pub fn eval_function(
     function: Literal,
     list: Vec<Literal>,
     variables: &mut Variables,
+    deleted: &mut Vec<Literal>
 ) -> Result<Literal, String> {
     let values = list
         .into_iter()
-        .map(|literal| eval_literal(literal, variables))
+        .map(|literal| eval_literal(literal, variables, deleted))
         .skip(1)
         .collect::<Result<Vec<_>, String>>()?;
 
@@ -80,5 +81,5 @@ pub fn eval_function(
             local_variables.insert(key, value);
         });
 
-    eval_literal(*body, &mut local_variables)
+    eval_literal(*body, &mut local_variables, deleted)
 }
