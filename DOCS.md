@@ -1,3 +1,17 @@
+## Summary 
+- [How to Run It](#how-to-run-it)
+- [Introduction](#introduction)
+- [Syntax](#syntax)
+- [Variables](#variables)
+- [Printing Things](#printing-things)
+- [Basic Mathematical Operations](#basic-mathematical-operations)
+- [Relational Operators](#relational-operators)
+- [Data Types](#data-types)
+  - [Numbers](#numbers)
+  - [Strings](#strings)
+  - [Vectors](#vectors)
+
+
 
 ## How to run it 
 Just use
@@ -28,8 +42,8 @@ For example, if you forget a closing parenthesis:
 Error: "Unclosed parenthesis somewhere. Good luck trying to find it."
 ```
 
-## Define variables
-Variables are defined with using **define** keyword.
+## Variables
+Variables are defined using the **define** keyword.
 
 ```liwb
 (define x 10)
@@ -119,15 +133,15 @@ output:
 
 The full list are:
 
-- sqrt ## get the square root of a given number
-- sin ## get the sine of a given number 
-- cos ## get the cosine of a given number
-- tan ## get the tangent of a given number
-- abs ## get the module of a given number
-- log10 ## get the log of the number in the base 10
-- floor ## round down a number
-- ceil ## round up a number
-- round ## round a number
+- sqrt: Get the square root of a given number
+- sin: Get the sine of a given number
+- cos: Get the cosine of a given number
+- tan: Get the tangent of a given number
+- abs: Get the absolute value of a given number
+- log10: Get the logarithm of the number in base 10
+- floor: Round down a number
+- ceil: Round up a number
+- round: Round a number
 
 ## Relational operators
 Liwb include 5 basic relational operators
@@ -273,4 +287,18 @@ output:
 ```bash
 Monday
 ```
+
 Remember that vector indexing starts at 0.
+
+Inspired by Javascript, out of bound indexing in a vector returns void, 
+not a anoying error.
+
+```liwb
+(define vector [])
+(print (nth vector 10))
+```
+output:
+
+```bash
+()
+```
