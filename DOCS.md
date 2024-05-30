@@ -228,9 +228,8 @@ output:
 [ 1 2 3 4 5]
 ```
 
-So, because i think vectors are the cooler data type of programming, 
-and i don't like negative numbers, 
-you cannot define a vector with negative numbers.
+Vectors are lazy evaluated, so, instead of storing the value of a operation, they 
+stores the operation itself, and only get evaluted when you access then.
 
 ```liwb
 (define bad-numbers [(- 0 1) (- 0 3) (- 0 7)])
@@ -239,7 +238,48 @@ you cannot define a vector with negative numbers.
 output:
 
 ```bash
-[() () ()]
+[ 
+(liwb list#[MathOperator(Subtract), Number(0.0), Number(1.0)])
+(liwb list#[MathOperator(Subtract), Number(0.0), Number(3.0)])
+(liwb list#[MathOperator(Subtract), Number(0.0), Number(7.0)])  
+]
+```
+
+To access a element of the vector, use the **nth** function:
+
+```liwb
+(define days [
+    "Monday"
+    "Tuesday"
+    "Wednesday"
+    "Thursday"
+    "Friday"
+    "Saturday"
+    "Sunday"
+])
+(print (nth days 0))
+```
+output:
+
+```bash
+"Monday"
+```
+
+Remember that vector indexing starts at 0.
+
+Inspired by Javascript, out of bound indexing on a vector returns void, 
+not a anoying error.
+
+```liwb
+(define vector [])
+(print (nth vector 10))
+```
+output:
+
+```bash
+()
+```
+
 ```
 Vectors cannot store values of variables, instead, they store the variable name.
 
@@ -266,39 +306,4 @@ output:
 
 ```bash
 [name-1 name-2]
-```
-
-To access a element of the vector, use the **nth** function:
-
-```liwb
-(define days [
-    Monday
-    Tuesday
-    Wednesday
-    Thursday
-    Friday
-    Saturday
-    Sunday
-])
-(print (nth days 0))
-```
-output:
-
-```bash
-Monday
-```
-
-Remember that vector indexing starts at 0.
-
-Inspired by Javascript, out of bound indexing in a vector returns void, 
-not a anoying error.
-
-```liwb
-(define vector [])
-(print (nth vector 10))
-```
-output:
-
-```bash
-()
 ```
