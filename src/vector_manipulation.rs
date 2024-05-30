@@ -48,7 +48,11 @@ fn eval_nth(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Lit
         return Err(format!("Error. Expected Literal::Vector, found: {:?}", v));
     };
     let index: usize = index.round() as usize;
-    Ok(v.into_iter().nth(index).unwrap_or(Literal::Void))
+    let literal = match v.into_iter().nth(index).unwrap_or(Literal::Void) {
+        Literal::Symbol(s) => Literal::Symbol(s), 
+        literal => eval_literal(literal, variables, deleted)?,
+    };
+    Ok(literal)
 }
 
 fn eval_join(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
