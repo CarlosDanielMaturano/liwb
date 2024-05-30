@@ -41,7 +41,7 @@ fn parse_tokens(tokens: &mut PeekableTokens) -> Result<Literal, String> {
                     if s.contains("\"") {
                         if s.chars().into_iter().filter(|c| *c == '"').count() != 2 {
                             return Err(String::from(
-                                "You have a invalid string literal somewhere, good luck!",
+                                "You have a invalid string literal somewhere, good luck trying to find it!",
                             ));
                         }
                         literals.push(Literal::String(s.replace("\"", "").to_string()));

@@ -1,3 +1,4 @@
+
 ## How to run it 
 Just use
 ```bash
@@ -5,7 +6,7 @@ liwb <file-path> ## If you have just the binary
 cargo r <file-path> ## If you have the project
 ```
 
-# Basics
+## Introduction 
 Liwb, as its name suggests, works like lisp, so everything its a list.
 It's also a procedural functional language, what mean that it does not have classes,
 hoisting, mutability and some bloated features of modern ones.
@@ -18,7 +19,7 @@ just put everything inside parenthesis and hope it works
 (define x 10) 
 (print x)
 ```
-Good syntax errors messages make you feel dumb for forgeting something so simple.
+Good syntax errors messages are overrated.
 So, in liwb, to give programmers a little bit of action, 
 it has no useful syntax error messages.
 For example, if you forget a closing parenthesis:
@@ -115,6 +116,7 @@ output:
 ```bash
 -0.9880316240928618 4 
 ```
+
 The full list are:
 
 - sqrt ## get the square root of a given number
@@ -140,3 +142,135 @@ ouput
 ```bash
 true false true true true
 ```
+
+## Data types
+As every program language, Liwb have a defined set of data types.
+
+### Numbers
+Every single number as treated as a 64 bits float  number.
+So, (= 10 10.0) is true in liwb.
+
+```liwb
+(print (= 10 10.0))
+```
+output:
+
+```bash
+true
+```
+
+Keep in mind that negative numbers do exist in liwb, 
+but you can't define them directly, because i think they are bad numbers.
+So, if you need a negative number for some reason, just do the following:
+
+```liwb
+(define negative (- 0 n))
+```
+
+Where n is the module of the negative number you want.
+
+### Strings
+
+Strings in liwb are simple definied inside double qoutes ("), 
+they are not really useful here, and don't have a purpose other than beatiful priting.
+
+```liwb
+(define hello-world "Hello, World")
+(print hello-world)
+```
+output:
+
+```bash
+Hello, World
+```
+
+If you forget to close a double qoute, you don't get a error, instead, the string becomes a variable name:
+
+```liwb
+(define name name")
+```
+
+output:
+
+```bash
+Error: "Unknow symbol name"
+```
+
+### Vectors
+
+Vectors in liwb, as every data type, cannot be mutate,
+and they can store basically everything.
+Vectors are defined with brackets, [ and ].
+
+Examples: 
+
+```liwb
+(define numbers [1 2 3 4 5])
+(print numbers)
+```
+output:
+
+```bash
+[ 1 2 3 4 5]
+```
+
+So, because i think vectors are the cooler data type of programming, 
+and i don't like negative numbers, 
+you cannot define a vector with negative numbers.
+
+```liwb
+(define bad-numbers [(- 0 1) (- 0 3) (- 0 7)])
+(print bad-numbers)
+```
+output:
+
+```bash
+[() () ()]
+```
+Vectors cannot store values of variables, instead, they store the variable name.
+
+```liwb
+(define name-1 "Josh")
+(define name-2 "Jay")
+(define names [name-1 name-2])
+(print names)
+```
+output:
+
+```bash
+[name-1 name-2]
+```
+
+You can also create a vector with variables that does not exists:
+
+```liwb
+(define names [name-1 name-2])
+(print names)
+```
+
+output:
+
+```bash
+[name-1 name-2]
+```
+
+To access a element of the vector, use the **nth** function:
+
+```liwb
+(define days [
+    Monday
+    Tuesday
+    Wednesday
+    Thursday
+    Friday
+    Saturday
+    Sunday
+])
+(print (nth days 0))
+```
+output:
+
+```bash
+Monday
+```
+Remember that vector indexing starts at 0.
