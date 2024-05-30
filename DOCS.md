@@ -33,7 +33,7 @@ Variables are defined with using **define** keyword.
 ```liwb
 (define x 10)
 ```
-The define closure always returns void, which is represented by: **()**.
+Every closure in liwb returns a value, on the define closure, the value is void, which is represented by: **()**.
 So, you can define a variable with the value of a variable definition.
 
 ```liwb
@@ -47,6 +47,16 @@ you can just redefine it.
 ```liwb
 (define x 10)
 (define x 5) 
+```
+In, liwb, everything is a valid variable name, even keywords, 
+as long it is not a number, a parenthesis or a bracket
+
+```liwb
+(define blah 1)
+(define --- []) 
+(define 1-4___-5 2) 
+(define *** 3)
+(define define "Define")
 ```
 
 ## Printing things
@@ -116,3 +126,17 @@ The full list are:
 - floor ## round down a number
 - ceil ## round up a number
 - round ## round a number
+
+## Relational operators
+Liwb include 5 basic relational operators
+
+Examples:
+
+```liwb
+(print (= 10 10) (< 5 4) (> 3 0) (<= 1 3) (>= 0 0) )
+```
+ouput
+
+```bash
+true false true true true
+```
