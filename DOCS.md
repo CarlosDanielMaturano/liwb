@@ -58,8 +58,61 @@ So, of course, liwb has a print function.
 (define x 10)
 (print x)
 ```
-output
+output:
 
 ```bash
 10
 ```
+
+## Basic Mathematical operations
+In liwb, the 4 main operator works just like in lisp, they get accumulate.
+
+Examples:
+
+```liwb
+(define a (+ 1 2 3 4 5))
+(define b (- 1 2 3 4 5 ))
+(define c (/ 1 2 3 4 5))
+(define d (* 1 2 3 4 5))
+(print a b c d)
+```
+output 
+
+```bash
+15 -13 0.008333333333333333 120
+```
+And, of couse, you can mix them.
+
+```liwb
+(define a (+ 1 (- 2 ( / 3 (* 4 5)))))
+(print a)
+```
+output:
+
+```bash
+2.85
+```
+Liwb also have other useful math functions:
+
+```liwb
+(define a (sin 30))
+(define b (sqrt 16))
+(define c (mod 10 2))
+(print a b c)
+```
+output: 
+
+```bash
+-0.9880316240928618 4 
+```
+The full list are:
+
+- sqrt ## get the square root of a given number
+- sin ## get the sine of a given number 
+- cos ## get the cosine of a given number
+- tan ## get the tangent of a given number
+- abs ## get the module of a given number
+- log10 ## get the log of the number in the base 10
+- floor ## round down a number
+- ceil ## round up a number
+- round ## round a number
