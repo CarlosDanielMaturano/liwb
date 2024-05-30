@@ -382,7 +382,6 @@ fn fizz_buzz() {
     );
 }
 
-
 #[test]
 #[should_panic]
 fn trying_to_use_deleted_literal() {

@@ -44,7 +44,8 @@ impl Display for Literal {
             match self {
                 Literal::Number(n) => n.to_string(),
                 Literal::Boolean(b) => b.to_string(),
-                Literal::String(s) | Literal::Symbol(s) => s.to_string(),
+                Literal::String(s) => format!("\"{}\"", s.to_string()),
+                Literal::Symbol(s) => s.to_string(),
                 Literal::Vector(v) => {
                     let mut result = String::from("[ ");
                     v.into_iter().for_each(|literal| {
@@ -53,6 +54,7 @@ impl Display for Literal {
                     result += " ]";
                     result
                 }
+                Literal::List(list) => format!("(liwb list#{:?})", list),
                 Literal::Function { name, .. } => format!("(liwb function#{name})"),
                 Literal::Void | _ => "()".to_string(),
             }
