@@ -2,6 +2,7 @@
 - [How to Run It](#how-to-run-it)
 - [Introduction](#introduction)
 - [Syntax](#syntax)
+- [Comments](#commens)
 - [Variables](#variables)
 - [Printing Things](#printing-things)
 - [Basic Mathematical Operations](#basic-mathematical-operations)
@@ -40,6 +41,9 @@ For example, if you forget a closing parenthesis:
 ```bash
 Error: "Unclosed parenthesis somewhere. Good luck trying to find it."
 ```
+
+## Comments
+Liwb follows the philosophy that your code should be self explanatory, so comments does not exists here.
 
 ## Variables
 Variables are defined using the **define** keyword.
@@ -327,7 +331,7 @@ Example:
 (print (join numbers 5))
 ```
 
-outputs:
+output:
 
 ```bash
 [1 2 3 4 5] 
@@ -341,7 +345,7 @@ Example:
 (define numbers (range 1 10))
 (print numbers)
 ```
-outputs:
+output:
 
 ```bash
 [1 2 3 4 5 6 7 8 9 10] 
