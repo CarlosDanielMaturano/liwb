@@ -46,6 +46,35 @@ output:
     [ 1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz 16 17 Fizz 19 Buzz  ]
 ```
 
+FibFizzBuzz
+
+```liwb
+(fn fib [n]
+    (if (<= n 2)
+        (if (= n 1) 
+            0
+            1)
+        (+ (fib (- n 1)) (fib (- n 2)))))
+
+(fn fizzbuzz [n]
+    (if (= (mod n 15) 0)
+        "FizzBuzz"
+        (if (= (mod n 3) 0)
+            "Fizz"
+            (if (= (mod n 5) 0)
+                "Buzz"
+                n))))
+
+(define fibonacci-sequence (map fib (range 1 20)))
+(define fizzbuzz-fibonacci (map fizzbuzz fibonacci-sequence))
+(print fizzbuzz-fibonacci)
+```
+output:
+
+```bash
+[ "FizzBuzz" 1 1 2 "Fizz" "Buzz" 8 13 "Fizz" 34 "Buzz" 89 "Fizz" 233 377 "Buzz" "Fizz" 1597 2584 4181]
+```
+
 ## How to use the language and how it works :scroll:
 See [Docs](./DOCS.md)
 
