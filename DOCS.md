@@ -12,7 +12,6 @@
   - [Vectors](#vectors)
 
 
-
 ## How to run it 
 Just use
 ```bash
@@ -144,17 +143,24 @@ The full list are:
 - round: Round a number
 
 ## Relational operators
-Liwb include 5 basic relational operators
+Liwb include 4 basic relational operators
+
+- = -> equals operator
+- > -> bigger than operator
+- < -> less-than operator
+- >= -> bigger-or-equal-than operator
+- <= -> less-or-equal-than operator
+- != -> not-equal operator
 
 Examples:
 
 ```liwb
-(print (= 10 10) (< 5 4) (> 3 0) (<= 1 3) (>= 0 0) )
+(print (= 10 10) (< 5 4) (> 3 0) (<= 1 3) (>= 0 0) (!= 3 3))
 ```
 ouput
 
 ```bash
-true false true true true
+true false true true true false
 ```
 
 ## Data types
@@ -307,3 +313,74 @@ output:
 ```bash
 [name-1 name-2]
 ```
+#### Vector functions
+In liwb, there are 4 main  functions for working with vectors.
+
+- nth -> as seen before, it's used acessing elements of a vector.
+
+- join -> for creating a new vector with a new element inside it.
+
+Example:
+
+```liwb
+(define numbers [1 2 3 4])
+(print (join numbers 5))
+```
+
+outputs:
+
+```bash
+[1 2 3 4 5] 
+```
+
+range -> for creating a vector of numbers from a given range
+
+Example:
+
+```liwb
+(define numbers (range 1 10))
+(print numbers)
+```
+outputs:
+
+```bash
+[1 2 3 4 5 6 7 8 9 10] 
+```
+
+- map -> for mapping a function to a vector, 
+returns a new vector with the result of the function call on each element.
+
+Example:
+
+```liwb
+(fn is-even [number]
+    (= 0 (mod number 2)))
+(define numbers (range 1 6))
+(print (map is-even numbers))
+```
+
+output:
+
+```bash
+[false true false true false true] 
+```
+
+- filter -> a function that selects elements from a vector based on a provided function.
+
+Example:
+
+```liwb
+(fn is-even [x] 
+    (= 0 (mod x 2))))
+
+(define numbers (range 1 10))
+(define even-numbers (filter is-even numbers))
+(print even-numbers)
+```
+
+output:
+
+```bash
+[2 4 6 8 10] 
+```
+
