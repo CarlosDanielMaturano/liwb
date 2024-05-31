@@ -12,6 +12,7 @@
   - [Strings](#strings)
   - [Vectors](#vectors)
 - [Flow Control Operators](#flow-control-operators)
+- [Functions](#functions)
 
 
 ## How to run it 
@@ -491,4 +492,20 @@ output
 
 ```bash
 [0 1 1 2 3 5 8 13 21 34 55 89 144]
+```
+
+## Delete Literals
+Liwb has a magic function, the *delete* funciton, and is for, guess what, deleting literals
+
+Lets say you dont want a program to use a bad number, so, simply delete it 
+
+```liwb
+(delete 69)
+(define  a 69)
+```
+
+output:
+
+```bash
+Error: "Trying to evaluate a deleted literal: Number(69.0)"
 ```
