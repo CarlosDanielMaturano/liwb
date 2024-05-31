@@ -339,6 +339,7 @@ Example:
 (print (join numbers 5))
 ```
 
+
 output:
 
 ```bash
@@ -372,6 +373,7 @@ Example:
 ```
 
 output:
+
 
 ```bash
 [false true false true false true] 
@@ -421,4 +423,72 @@ output:
 
 ```bash
 "a is equal or bigger than 10" "b is less than 10"
+```
+
+## Functions
+In liwb, for creating a function, you start with the *fn* keyword, 
+and, after that you need 3 things: the function name,
+the arguments, and the function body.
+
+The function naming rules are the same for variables.
+
+The paramaters are defined inside a vector.
+
+The body is a single list.
+
+Example:
+
+```liwb
+(fn is-even [x] 
+    (= 0 (mod x 2))))
+```
+
+is-even is the function name, 
+x is a single paramater, and the next thing is the function body.
+
+The argument for a function can be zero or more.
+
+Example:
+
+```liwb
+(fn function-without-arguments [] 
+    ())
+(fn function-with-multiple-arguments [a b c d e f g and-so-on ] 
+    ())
+```
+
+To call funciton, just put it as the first thing inside a list, after that, put the arguments.
+
+Example:
+
+```liwb
+(fn print-n [n] 
+    (print n))
+(print-n 10)
+```
+output
+
+```bash
+10
+```
+
+You can use recursion in functions:
+
+Example:
+
+```liwb
+(fn fib [n]
+    (if (<= n 2)
+        (if (= n 1) 
+            0
+            1)
+        (+ (fib (- n 1)) (fib (- n 2)))))
+
+(print (map fib (range 1 13)))
+```
+
+output
+
+```bash
+[0 1 1 2 3 5 8 13 21 34 55 89 144]
 ```
