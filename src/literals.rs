@@ -15,6 +15,7 @@ pub enum Operator {
     BiggerThan,
     LessOrEqualThan,
     BiggerOrEqualThan,
+    NotEqual,
 }
 
 #[derive(Debug, PartialEq, Clone, PartialOrd)]

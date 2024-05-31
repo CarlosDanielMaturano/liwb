@@ -150,7 +150,8 @@ fn eval_binary_operator(list: Vec<Literal>, variables: &mut Variables, deleted: 
         | Operator::LessThan
         | Operator::BiggerThan
         | Operator::LessOrEqualThan
-        | Operator::BiggerOrEqualThan => eval_relation_operator(list, variables, deleted),
+        | Operator::BiggerOrEqualThan
+        | Operator::NotEqual => eval_relation_operator(list, variables, deleted),
     }
 }
 
@@ -244,6 +245,7 @@ fn eval_relation_operator(
         Operator::BiggerThan => left > right,
         Operator::LessOrEqualThan => left <= right,
         Operator::BiggerOrEqualThan => left >= right,
+        Operator::NotEqual => left != right,
     }))
 }
 
