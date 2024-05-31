@@ -11,6 +11,7 @@
   - [Numbers](#numbers)
   - [Strings](#strings)
   - [Vectors](#vectors)
+- [Flow Control Operators](#flow-control-operators)
 
 
 ## How to run it 
@@ -393,4 +394,31 @@ output:
 
 ```bash
 [2 4 6 8 10] 
+```
+
+## Flow Control Operators
+
+For keeping things simple, in Liwb, the only flow control operator is the *if*.
+The *if* closure consists of a (statement), a (left side), and a (right side).
+It returns the left side if the statement is true, otherwise, the right side. 
+The sides on a if closure are lazily evaluated.
+
+Examples:
+
+```liwb
+(define a 10)
+(print (if (>= a 10)
+    "a is equal or bigger than 10"
+    "a is less than 10"))
+
+(define b 5)
+(print (if (>= b 10)
+    "b is equal or bigger than 10"
+    "b is less than 10"))
+```
+
+output: 
+
+```bash
+"a is equal or bigger than 10" "b is less than 10"
 ```
