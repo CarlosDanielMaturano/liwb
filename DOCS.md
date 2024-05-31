@@ -26,8 +26,11 @@ It's also a procedural functional language, what mean that it does not have clas
 hoisting, mutability and some bloated features of modern ones.
 
 ## Syntax
-The syntax in liwb are easy,
-just put everything inside parenthesis and hope it works
+The syntax in Liwb is straightforward: just put everything inside parentheses and hope it works.
+
+```liwb
+(define x 10) 
+(print x)
 
 ```liwb
 (define x 10) 
@@ -36,14 +39,14 @@ just put everything inside parenthesis and hope it works
 Good syntax errors messages are overrated.
 So, in liwb, to give programmers a little bit of action, 
 it has no useful syntax error messages.
-For example, if you forget a closing parenthesis:
+For example, if you forget a closing parentheses:
 
 ```bash
-Error: "Unclosed parenthesis somewhere. Good luck trying to find it."
+Error: "Unclosed parentheses somewhere. Good luck trying to find it."
 ```
 
 ## Comments
-Liwb follows the philosophy that your code should be self explanatory, so comments does not exists here.
+Liwb follows the philosophy that your code should be self-explanatory, so comments do not exist here.
 
 ## Variables
 Variables are defined using the **define** keyword.
@@ -57,9 +60,9 @@ So, you can define a variable with the value of a variable definition.
 ```liwb
 (define thing (define n 10))
 ```
-Here, n becomes 10, and thing becomes void, or ().
+Here, n becomes 10, and thing becomes void, represented by ().
 
-There's no way of mutating a variable after it's definition, however,
+There's no way of mutating a variable after it's definition; however,
 you can just redefine it.
 
 ```liwb
@@ -67,7 +70,7 @@ you can just redefine it.
 (define x 5) 
 ```
 In, liwb, everything is a valid variable name, even keywords, 
-as long it is not a number, a parenthesis or a bracket
+as long it is not a number, a parentheses or a bracket
 
 ```liwb
 (define blah 1)
@@ -92,8 +95,8 @@ output:
 10
 ```
 
-## Basic Mathematical operations
-In liwb, the 4 main operator works just like in lisp, they get accumulate.
+## Basic Mathematical Operations
+In Liwb, the four main operators work just like in Lisp; they accumulate their arguments.
 
 Examples:
 
@@ -134,7 +137,7 @@ output:
 -0.9880316240928618 4 
 ```
 
-The full list are:
+The full list is:
 
 - sqrt: Get the square root of a given number
 - sin: Get the sine of a given number
@@ -167,12 +170,11 @@ ouput
 true false true true true false
 ```
 
-## Data types
-As every program language, Liwb have a defined set of data types.
+## Data Types
+Like every programming language, Liwb has a defined set of data types.
 
 ### Numbers
-Every single number as treated as a 64 bits float  number.
-So, (= 10 10.0) is true in liwb.
+Every single number is treated as a 64-bit float number in Liwb. So, (= 10 10.0) is true.
 
 ```liwb
 (print (= 10 10.0))
@@ -183,8 +185,9 @@ output:
 true
 ```
 
-Keep in mind that negative numbers do exist in liwb, 
-but you can't define them directly, because i think they are bad numbers.
+Keep in mind that negative numbers do exist in Liwb,
+but you can't define them directly,
+because i think they are bad numbers.
 So, if you need a negative number for some reason, just do the following:
 
 ```liwb
@@ -195,8 +198,11 @@ Where n is the module of the negative number you want.
 
 ### Strings
 
-Strings in liwb are simple definied inside double qoutes ("), 
-they are not really useful here, and don't have a purpose other than beatiful priting.
+### Strings
+
+Strings in Liwb are simply defined inside double quotes ("), 
+but they are not particularly useful and don't serve a purpose 
+other than beautiful printing.
 
 ```liwb
 (define hello-world "Hello, World")
@@ -208,7 +214,9 @@ output:
 Hello, World
 ```
 
-If you forget to close a double qoute, you don't get a error, instead, the string becomes a variable name:
+If you forget to close a double quote,
+you won't get an error. 
+Instead, the string becomes a variable name:
 
 ```liwb
 (define name name")
@@ -222,7 +230,7 @@ Error: "Unknow symbol name"
 
 ### Vectors
 
-Vectors in liwb, as every data type, cannot be mutate,
+Vectors in Liwb, like every data type, cannot be mutated,
 and they can store basically everything.
 Vectors are defined with brackets, [ and ].
 
@@ -238,8 +246,9 @@ output:
 [ 1 2 3 4 5]
 ```
 
-Vectors are lazy evaluated, so, instead of storing the value of a operation, they 
-stores the operation itself, and only get evaluted when you access then.
+Vectors are lazily evaluated, 
+so instead of storing the value of an operation, 
+they store the operation itself, and only get evaluated when you access them.
 
 ```liwb
 (define bad-numbers [(- 0 1) (- 0 3) (- 0 7)])
@@ -255,7 +264,37 @@ output:
 ]
 ```
 
-To access a element of the vector, use the **nth** function:
+
+Vectors cannot store values of variables, instead, they store the variable name.
+
+```liwb
+(define name-1 "Josh")
+(define name-2 "Jay")
+(define names [name-1 name-2])
+(print names)
+```
+output:
+
+```bash
+[name-1 name-2]
+```
+
+You can also create a vector with variables that does not exists:
+
+```liwb
+(define names [name-1 name-2])
+(print names)
+```
+
+output:
+
+```bash
+[name-1 name-2]
+```
+#### Vector functions
+In liwb, there are 4 main  functions for working with vectors.
+
+- nth -> it's used for acessing elements of a vector.
 
 ```liwb
 (define days [
@@ -289,38 +328,6 @@ output:
 ```bash
 ()
 ```
-
-```
-Vectors cannot store values of variables, instead, they store the variable name.
-
-```liwb
-(define name-1 "Josh")
-(define name-2 "Jay")
-(define names [name-1 name-2])
-(print names)
-```
-output:
-
-```bash
-[name-1 name-2]
-```
-
-You can also create a vector with variables that does not exists:
-
-```liwb
-(define names [name-1 name-2])
-(print names)
-```
-
-output:
-
-```bash
-[name-1 name-2]
-```
-#### Vector functions
-In liwb, there are 4 main  functions for working with vectors.
-
-- nth -> as seen before, it's used acessing elements of a vector.
 
 - join -> for creating a new vector with a new element inside it.
 
@@ -387,4 +394,3 @@ output:
 ```bash
 [2 4 6 8 10] 
 ```
-
