@@ -1,4 +1,5 @@
 # Liwb
+
 ## Like lisp, but with *w* and *b*
 
 ![Static Badge](https://img.shields.io/badge/cargo-1.77.2%20-blue)
@@ -46,7 +47,7 @@ output:
     [ 1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz 16 17 Fizz 19 Buzz  ]
 ```
 
-FibFizzBuzz
+### *FibFizzBuzz*
 
 ```liwb
 (fn fib [n]

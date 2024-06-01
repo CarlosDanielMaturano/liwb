@@ -13,6 +13,7 @@
   - [Vectors](#vectors)
 - [Flow Control Operators](#flow-control-operators)
 - [Functions](#functions)
+- [Deleting things](#deleting-things)
 
 
 ## How to run it 
@@ -494,7 +495,7 @@ output
 [0 1 1 2 3 5 8 13 21 34 55 89 144]
 ```
 
-## Delete Literals
+## Deleting things
 Liwb has a magic function, the *delete* funciton, and is for, guess what, deleting literals
 
 Lets say you dont want a program to use a bad number, so, simply delete it 
@@ -512,6 +513,8 @@ Error: "Trying to evaluate a deleted literal: Number(69.0)"
 
 Oh, and you can also delete *keywords*:
 
+Example:
+
 ```liwb
 (delete define)
 (define a 69)
@@ -521,4 +524,26 @@ output:
 
 ```bash
 Error: "Trying to evaluate a deleted literal: Number(69.0)"
+```
+
+# Do 
+If you want to evaluate a bunch of things without caring about it's return value, 
+just use the the *do* closure.
+
+Example:
+
+```liwb
+(print (do 
+    (+ 0 1)
+    (range (1 10))
+    (if (= 0 1)
+        1
+        2)
+))
+```
+
+output:
+
+```bash
+()
 ```
