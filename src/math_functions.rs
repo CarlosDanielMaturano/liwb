@@ -4,7 +4,7 @@ use crate::literals::*;
 pub fn eval_operator_with_single_arg(
     list: Vec<Literal>,
     variables: &mut Variables,
-    deleted: &mut Vec<Literal>
+    deleted: &mut Vec<Literal>,
 ) -> Result<Literal, String> {
     let mut list = list.into_iter();
     let operator = list.next().ok_or(format!("Error. Missing operator"))?;
@@ -44,7 +44,7 @@ pub fn eval_operator_with_single_arg(
 pub fn eval_operator_with_double_argument(
     list: Vec<Literal>,
     variables: &mut Variables,
-    deleted: &mut Vec<Literal>
+    deleted: &mut Vec<Literal>,
 ) -> Result<Literal, String> {
     let mut list = list.into_iter();
     let operator = list.next().ok_or(format!("Error. Missing operator"))?;

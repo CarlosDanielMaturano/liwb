@@ -17,17 +17,28 @@ const VECTOR_OPERATORS: [&'static str; 5] = ["nth", "join", "range", "map", "fil
 
 pub fn eval_from_literals(literals: Vec<Literal>) -> Result<Vec<Literal>, String> {
     let mut variables: Variables = HashMap::new();
-    let mut deleted_literals:  Vec<Literal> = Vec::new();
+    let mut deleted_literals: Vec<Literal> = Vec::new();
     let mut results: Vec<Literal> = Vec::new();
     for literal in literals.into_iter() {
-        results.push(eval_literal(literal, &mut variables, &mut deleted_literals)?);
+        results.push(eval_literal(
+            literal,
+            &mut variables,
+            &mut deleted_literals,
+        )?);
     }
     Ok(results)
 }
 
-pub fn eval_literal(literal: Literal, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
+pub fn eval_literal(
+    literal: Literal,
+    variables: &mut Variables,
+    deleted: &mut Vec<Literal>,
+) -> Result<Literal, String> {
     if deleted.contains(&literal) {
-        return Err(format!("Trying to evaluate a deleted literal: {:?}", literal));
+        return Err(format!(
+            "Trying to evaluate a deleted literal: {:?}",
+            literal
+        ));
     }
     match literal {
         Literal::Void
@@ -46,7 +57,11 @@ pub fn eval_literal(literal: Literal, variables: &mut Variables, deleted: &mut V
     }
 }
 
-fn eval_list(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
+fn eval_list(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+    deleted: &mut Vec<Literal>,
+) -> Result<Literal, String> {
     let head = list[0].clone();
     if deleted.contains(&head) {
         return Err(format!("Trying to evaluate a deleted literal: {:?}", head));
@@ -89,7 +104,11 @@ fn eval_list(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Li
     }
 }
 
-fn eval_math_operator(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
+fn eval_math_operator(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+    deleted: &mut Vec<Literal>,
+) -> Result<Literal, String> {
     let mut list = list.into_iter();
     let operator = list.next();
 
@@ -135,7 +154,11 @@ fn eval_math_operator(list: Vec<Literal>, variables: &mut Variables, deleted: &m
     })
 }
 
-fn eval_binary_operator(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
+fn eval_binary_operator(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+    deleted: &mut Vec<Literal>,
+) -> Result<Literal, String> {
     let mut list = list.into_iter();
     let operator = list.next();
     let Some(Literal::BinaryOperator(operator)) = operator else {
@@ -159,7 +182,11 @@ fn eval_binary_operator(list: Vec<Literal>, variables: &mut Variables, deleted: 
     }
 }
 
-fn eval_if(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
+fn eval_if(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+    deleted: &mut Vec<Literal>,
+) -> Result<Literal, String> {
     let mut list = list.into_iter().skip(1);
 
     let statement = list
@@ -183,7 +210,11 @@ fn eval_if(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Lite
     return eval_literal(right.clone(), variables, deleted);
 }
 
-fn define_variable(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
+fn define_variable(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+    deleted: &mut Vec<Literal>,
+) -> Result<Literal, String> {
     let mut list = list.into_iter().skip(1);
 
     let name = list
@@ -211,7 +242,7 @@ fn define_variable(list: Vec<Literal>, variables: &mut Variables, deleted: &mut 
 fn eval_relation_operator(
     list: Vec<Literal>,
     variables: &mut Variables,
-    deleted: &mut Vec<Literal>
+    deleted: &mut Vec<Literal>,
 ) -> Result<Literal, String> {
     let list_size = list.len();
     if list_size != 3 {
@@ -253,7 +284,11 @@ fn eval_relation_operator(
     }))
 }
 
-fn eval_print(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
+fn eval_print(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+    deleted: &mut Vec<Literal>,
+) -> Result<Literal, String> {
     list.into_iter()
         .skip(1)
         .map(|literal| eval_literal(literal, variables, deleted))
@@ -282,7 +317,11 @@ fn eval_print(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<L
     Ok(Literal::Void)
 }
 
-fn eval_do(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
+fn eval_do(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+    deleted: &mut Vec<Literal>,
+) -> Result<Literal, String> {
     list.into_iter()
         .skip(1)
         .map(|literal| eval_literal(literal, variables, deleted))
@@ -290,7 +329,11 @@ fn eval_do(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Lite
     Ok(Literal::Void)
 }
 
-fn eval_str(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
+fn eval_str(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+    deleted: &mut Vec<Literal>,
+) -> Result<Literal, String> {
     Ok(list
         .into_iter()
         .skip(1)
@@ -322,8 +365,6 @@ fn eval_str(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Lit
 }
 
 fn eval_delete(list: Vec<Literal>, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
-    list.into_iter().for_each(|literal| {
-        deleted.push(literal)
-    });
+    list.into_iter().for_each(|literal| deleted.push(literal));
     Ok(Literal::Void)
-}   
+}

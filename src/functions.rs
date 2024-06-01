@@ -55,7 +55,7 @@ pub fn eval_function(
     function: Literal,
     list: Vec<Literal>,
     variables: &mut Variables,
-    deleted: &mut Vec<Literal>
+    deleted: &mut Vec<Literal>,
 ) -> Result<Literal, String> {
     let values = list
         .into_iter()

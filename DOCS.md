@@ -18,9 +18,17 @@
 
 ## How to run it 
 Just use
+
 ```bash
-liwb <file-path> ## If you have just the binary
-cargo r <file-path> ## If you have the project
+liwb 
+## use cargo r instead if you have the project 
+```
+
+It will start a new REPL.
+If you pass a file a arguments, it will run the file.
+
+```bash
+liwb  <file path>
 ```
 
 ## Introduction 

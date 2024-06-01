@@ -4,7 +4,7 @@ use crate::literals::*;
 pub fn eval_vector_operation(
     list: Vec<Literal>,
     variables: &mut Variables,
-    deleted: &mut Vec<Literal>
+    deleted: &mut Vec<Literal>,
 ) -> Result<Literal, String> {
     let operator = &list[0];
     let Literal::Symbol(operator) = operator else {
@@ -23,7 +23,11 @@ pub fn eval_vector_operation(
     }
 }
 
-fn eval_nth(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
+fn eval_nth(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+    deleted: &mut Vec<Literal>,
+) -> Result<Literal, String> {
     if list.len() != 3 {
         return Err(format!("Missing arguments for nth"));
     }
@@ -49,13 +53,17 @@ fn eval_nth(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Lit
     };
     let index: usize = index.round() as usize;
     let literal = match v.into_iter().nth(index).unwrap_or(Literal::Void) {
-        Literal::Symbol(s) => Literal::Symbol(s), 
+        Literal::Symbol(s) => Literal::Symbol(s),
         literal => eval_literal(literal, variables, deleted)?,
     };
     Ok(literal)
 }
 
-fn eval_join(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
+fn eval_join(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+    deleted: &mut Vec<Literal>,
+) -> Result<Literal, String> {
     let mut list = list.into_iter().skip(1);
     let vector_name = list
         .next()
@@ -78,7 +86,11 @@ fn eval_join(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Li
     ))
 }
 
-fn eval_range(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
+fn eval_range(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+    deleted: &mut Vec<Literal>,
+) -> Result<Literal, String> {
     let mut list = list.into_iter().skip(1);
     let start = eval_literal(
         list.next()
@@ -97,7 +109,7 @@ fn eval_range(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<L
         list.next()
             .ok_or(format!("Error. Missing end agurment for range function."))?,
         variables,
-        deleted
+        deleted,
     )?;
     let Literal::Number(end) = end else {
         return Err(format!(
@@ -114,7 +126,11 @@ fn eval_range(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<L
     Ok(Literal::Vector(range))
 }
 
-fn eval_map(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
+fn eval_map(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+    deleted: &mut Vec<Literal>,
+) -> Result<Literal, String> {
     if list.len() != 3 {
         return Err(format!(
             "Erro. Wrong number of arguments passed to map. Expected 3, found {}",
@@ -164,7 +180,11 @@ fn eval_map(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Lit
     ))
 }
 
-fn eval_filter(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
+fn eval_filter(
+    list: Vec<Literal>,
+    variables: &mut Variables,
+    deleted: &mut Vec<Literal>,
+) -> Result<Literal, String> {
     if list.len() != 3 {
         return Err(format!(
             "Erro. Wrong number of arguments passed to filter. Expected 3, found {}",
