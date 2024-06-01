@@ -76,7 +76,6 @@ fn parse_tokens(tokens: &mut PeekableTokens) -> Result<Literal, String> {
     match last {
         Some(Token::Rparen | Token::RBracket) => {
             if literals.is_empty() {
-                dbg!(literals);
                 return Ok(Literal::Void);
             }
             return Ok(Literal::List(literals));

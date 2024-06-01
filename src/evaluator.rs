@@ -99,7 +99,9 @@ fn eval_list(
                 }
             }
         },
-        Literal::String(_) | Literal::Boolean(_) | Literal::Number(_) => Ok(head),
+        Literal::String(_) 
+        | Literal::Boolean(_) 
+        | Literal::Number(_) => Ok(Literal::List(list)),
         Literal::Function { .. } => Ok(head),
     }
 }
@@ -312,7 +314,7 @@ fn eval_print(
 
                 literal = Literal::String(string);
             }
-            print!("{literal} ")
+            print!("{literal}\n")
         });
     Ok(Literal::Void)
 }
