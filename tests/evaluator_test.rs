@@ -389,3 +389,11 @@ fn trying_to_use_deleted_literal() {
     let literals = parser(lexer(&source)).unwrap();
     eval_from_literals(literals).unwrap();
 }
+
+#[test]
+#[should_panic]
+fn deleting_keyword() {
+    let source = read_file("liwb/deleting_keyword.liwb").unwrap();
+    let literals = parser(lexer(&source)).unwrap();
+    eval_from_literals(literals).unwrap();
+}

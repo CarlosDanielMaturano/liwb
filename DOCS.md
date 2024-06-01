@@ -501,7 +501,20 @@ Lets say you dont want a program to use a bad number, so, simply delete it
 
 ```liwb
 (delete 69)
-(define  a 69)
+(define a 69)
+```
+
+output:
+
+```bash
+Error: "Trying to evaluate a deleted literal: Number(69.0)"
+```
+
+Oh, and you can also delete *keywords*:
+
+```liwb
+(delete define)
+(define a 69)
 ```
 
 output:

@@ -48,6 +48,10 @@ pub fn eval_literal(literal: Literal, variables: &mut Variables, deleted: &mut V
 
 fn eval_list(list: Vec<Literal>, variables: &mut Variables, deleted: &mut Vec<Literal>) -> Result<Literal, String> {
     let head = list[0].clone();
+    if deleted.contains(&head) {
+        return Err(format!("Trying to evaluate a deleted literal: {:?}", head));
+    }
+
     match head {
         Literal::List(list) => eval_list(list.to_vec(), variables, deleted),
         Literal::Void => Ok(Literal::Void),
